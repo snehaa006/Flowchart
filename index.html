@@ -41,18 +41,18 @@
         /* Connection line styles - clean dashed lines */
         .flow-line {
             fill: none;
-            stroke: #c9a227;
+            stroke: #00e5ff;
             stroke-width: 1.5;
             stroke-dasharray: 6, 4;
-            opacity: 0.7;
+            opacity: 0.8;
         }
 
         .flow-line-vertical {
             fill: none;
-            stroke: #c9a227;
+            stroke: #00e5ff;
             stroke-width: 1.5;
             stroke-dasharray: 6, 4;
-            opacity: 0.7;
+            opacity: 0.8;
         }
 
         /* Animated dash flow effect on lines */
@@ -67,12 +67,12 @@
 
         /* Arrow markers */
         .arrow-marker {
-            fill: #c9a227;
+            fill: #00e5ff;
         }
 
         /* Flow direction indicator - small triangle */
         .flow-arrow {
-            fill: #c9a227;
+            fill: #00e5ff;
             opacity: 0.8;
         }
 
@@ -120,27 +120,27 @@
 
         .iso-outline {
             fill: none;
-            stroke: #c9a227;
+            stroke: #00e5ff;
             stroke-width: 1.5;
             opacity: 0.9;
         }
 
         .iso-fill {
-            fill: rgba(201, 162, 39, 0.03);
+            fill: rgba(0, 229, 255, 0.03);
             stroke: none;
         }
 
         .iso-detail {
             fill: none;
-            stroke: #c9a227;
+            stroke: #00e5ff;
             stroke-width: 1;
             opacity: 0.3;
         }
 
         /* Pulsing glow effect on boxes */
         @keyframes boxGlow {
-            0%, 100% { filter: drop-shadow(0 0 2px rgba(201, 162, 39, 0.3)); }
-            50% { filter: drop-shadow(0 0 8px rgba(201, 162, 39, 0.6)); }
+            0%, 100% { filter: drop-shadow(0 0 2px rgba(0, 229, 255, 0.3)); }
+            50% { filter: drop-shadow(0 0 8px rgba(0, 229, 255, 0.6)); }
         }
 
         .iso-box > svg {
@@ -157,7 +157,7 @@
             left: 50%;
             transform: translate(-50%, -50%);
             background: radial-gradient(circle at 40% 40%, rgba(255, 255, 255, 0.08), transparent 70%);
-            border: 1.5px solid rgba(201, 162, 39, 0.6);
+            border: 1.5px solid rgba(0, 229, 255, 0.6);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -167,12 +167,12 @@
         /* Circle zone pulse */
         @keyframes circlePulse {
             0%, 100% {
-                border-color: rgba(201, 162, 39, 0.6);
-                box-shadow: 0 0 5px rgba(201, 162, 39, 0.2);
+                border-color: rgba(0, 229, 255, 0.6);
+                box-shadow: 0 0 5px rgba(0, 229, 255, 0.2);
             }
             50% {
-                border-color: rgba(201, 162, 39, 0.9);
-                box-shadow: 0 0 15px rgba(201, 162, 39, 0.4);
+                border-color: rgba(0, 229, 255, 0.9);
+                box-shadow: 0 0 15px rgba(0, 229, 255, 0.4);
             }
         }
 
@@ -222,7 +222,7 @@
         /* Sensor antenna blink */
         @keyframes antennaBlink {
             0%, 100% { fill: rgba(255, 255, 255, 0.15); }
-            50% { fill: rgba(201, 162, 39, 0.8); }
+            50% { fill: rgba(0, 229, 255, 0.8); }
         }
 
         .sensor-antenna {
@@ -275,7 +275,7 @@
             }
             50% {
                 r: 5;
-                fill: rgba(201, 162, 39, 0.6);
+                fill: rgba(0, 229, 255, 0.6);
             }
         }
 
@@ -327,8 +327,8 @@
                 stroke: rgba(255, 255, 255, 0.85);
             }
             50% {
-                fill: rgba(201, 162, 39, 0.4);
-                stroke: rgba(201, 162, 39, 1);
+                fill: rgba(0, 229, 255, 0.4);
+                stroke: rgba(0, 229, 255, 1);
             }
         }
 
@@ -349,7 +349,7 @@
         /* Edge gear inner pulse */
         @keyframes innerGearPulse {
             0%, 100% { fill: rgba(255, 255, 255, 0.15); }
-            50% { fill: rgba(201, 162, 39, 0.5); }
+            50% { fill: rgba(0, 229, 255, 0.5); }
         }
 
         .gear-inner {
@@ -479,11 +479,11 @@
         }
 
         .entry-arrow.up {
-            border-bottom: 6px solid #c9a227;
+            border-bottom: 6px solid #00e5ff;
         }
 
         .entry-arrow.down {
-            border-top: 6px solid rgba(201, 162, 39, 0.5);
+            border-top: 6px solid rgba(0, 229, 255, 0.5);
         }
 
         /* Flow particles moving along paths */
@@ -495,8 +495,8 @@
         }
 
         .flow-particle {
-            fill: #c9a227;
-            filter: drop-shadow(0 0 4px rgba(201, 162, 39, 0.8));
+            fill: #00e5ff;
+            filter: drop-shadow(0 0 4px rgba(0, 229, 255, 0.8));
         }
 
         /* Animated particles along paths */
@@ -535,8 +535,8 @@
         }
 
         .data-dot {
-            fill: #c9a227;
-            filter: drop-shadow(0 0 6px rgba(201, 162, 39, 0.9));
+            fill: #00e5ff;
+            filter: drop-shadow(0 0 6px rgba(0, 229, 255, 0.9));
         }
 
         /* Binary data visualization near components */
@@ -548,7 +548,7 @@
         .binary-text {
             font-family: monospace;
             font-size: 6px;
-            fill: rgba(201, 162, 39, 0.5);
+            fill: rgba(0, 229, 255, 0.5);
             animation: binaryFade 2s ease-in-out infinite;
         }
     </style>
@@ -560,17 +560,17 @@
             <!-- Defs for arrow markers and paths -->
             <defs>
                 <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
-                    <polygon points="0 0, 8 3, 0 6" fill="#c9a227" opacity="0.8"/>
+                    <polygon points="0 0, 8 3, 0 6" fill="#00e5ff" opacity="0.8"/>
                 </marker>
 
                 <!-- Define paths for particle animation -->
                 <path id="path-sensor-digital" d="M 195 150 L 195 230 L 115 280"/>
                 <path id="path-machine-protocol" d="M 705 150 L 705 230 L 785 280"/>
-                <path id="path-digital-plc" d="M 180 340 L 380 470"/>
-                <path id="path-protocol-plc" d="M 720 340 L 520 470"/>
+                <path id="path-digital-plc" d="M 180 340 L 180 470 L 380 470"/>
+                <path id="path-protocol-plc" d="M 720 340 L 720 470 L 520 470"/>
                 <path id="path-plc-edge" d="M 450 530 L 450 650"/>
-                <path id="path-edge-db" d="M 385 710 L 300 850"/>
-                <path id="path-edge-cloud" d="M 515 710 L 600 850"/>
+                <path id="path-edge-db" d="M 385 710 L 385 850 L 300 850"/>
+                <path id="path-edge-cloud" d="M 515 710 L 515 850 L 600 850"/>
             </defs>
 
             <!-- Sensor down to Digital -->
@@ -579,20 +579,20 @@
             <!-- Machine down to Protocol -->
             <path class="flow-line" d="M 705 150 L 705 230 L 785 280" marker-end="url(#arrow)"/>
 
-            <!-- Digital to PLC (diagonal) -->
-            <path class="flow-line" d="M 180 340 L 380 470" marker-end="url(#arrow)"/>
+            <!-- Digital to PLC (rectilinear) -->
+            <path class="flow-line" d="M 180 340 L 180 470 L 380 470" marker-end="url(#arrow)"/>
 
-            <!-- Protocol to PLC (diagonal) -->
-            <path class="flow-line" d="M 720 340 L 520 470" marker-end="url(#arrow)"/>
+            <!-- Protocol to PLC (rectilinear) -->
+            <path class="flow-line" d="M 720 340 L 720 470 L 520 470" marker-end="url(#arrow)"/>
 
             <!-- PLC down to Edge -->
             <line class="flow-line-vertical" x1="450" y1="530" x2="450" y2="650" marker-end="url(#arrow)"/>
 
-            <!-- Edge to Database (diagonal) -->
-            <path class="flow-line" d="M 385 710 L 300 850" marker-end="url(#arrow)"/>
+            <!-- Edge to Database (rectilinear) -->
+            <path class="flow-line" d="M 385 710 L 385 850 L 300 850" marker-end="url(#arrow)"/>
 
-            <!-- Edge to Cloud (diagonal) -->
-            <path class="flow-line" d="M 515 710 L 600 850" marker-end="url(#arrow)"/>
+            <!-- Edge to Cloud (rectilinear) -->
+            <path class="flow-line" d="M 515 710 L 515 850 L 600 850" marker-end="url(#arrow)"/>
 
             <!-- Database to Cloud horizontal -->
             <line class="flow-line" x1="300" y1="920" x2="600" y2="920"/>
@@ -616,18 +616,18 @@
 
             <!-- Digital to PLC particles -->
             <circle class="flow-particle moving-particle particle-path3" r="4">
-                <animateMotion dur="1.5s" repeatCount="indefinite" path="M 180 340 L 380 470"/>
+                <animateMotion dur="2s" repeatCount="indefinite" path="M 180 340 L 180 470 L 380 470"/>
             </circle>
-            <circle class="flow-particle moving-particle particle-path3" r="3" style="animation-delay: 0.75s;">
-                <animateMotion dur="1.5s" repeatCount="indefinite" path="M 180 340 L 380 470" begin="0.75s"/>
+            <circle class="flow-particle moving-particle particle-path3" r="3" style="animation-delay: 1s;">
+                <animateMotion dur="2s" repeatCount="indefinite" path="M 180 340 L 180 470 L 380 470" begin="1s"/>
             </circle>
 
             <!-- Protocol to PLC particles -->
             <circle class="flow-particle moving-particle particle-path4" r="4">
-                <animateMotion dur="1.5s" repeatCount="indefinite" path="M 720 340 L 520 470"/>
+                <animateMotion dur="2s" repeatCount="indefinite" path="M 720 340 L 720 470 L 520 470"/>
             </circle>
-            <circle class="flow-particle moving-particle particle-path4" r="3" style="animation-delay: 0.75s;">
-                <animateMotion dur="1.5s" repeatCount="indefinite" path="M 720 340 L 520 470" begin="0.75s"/>
+            <circle class="flow-particle moving-particle particle-path4" r="3" style="animation-delay: 1s;">
+                <animateMotion dur="2s" repeatCount="indefinite" path="M 720 340 L 720 470 L 520 470" begin="1s"/>
             </circle>
 
             <!-- PLC to Edge particles -->
@@ -643,18 +643,18 @@
 
             <!-- Edge to Database particles -->
             <circle class="flow-particle moving-particle particle-path6" r="4">
-                <animateMotion dur="1.5s" repeatCount="indefinite" path="M 385 710 L 300 850"/>
+                <animateMotion dur="2s" repeatCount="indefinite" path="M 385 710 L 385 850 L 300 850"/>
             </circle>
-            <circle class="flow-particle moving-particle particle-path6" r="3" style="animation-delay: 0.75s;">
-                <animateMotion dur="1.5s" repeatCount="indefinite" path="M 385 710 L 300 850" begin="0.75s"/>
+            <circle class="flow-particle moving-particle particle-path6" r="3" style="animation-delay: 1s;">
+                <animateMotion dur="2s" repeatCount="indefinite" path="M 385 710 L 385 850 L 300 850" begin="1s"/>
             </circle>
 
             <!-- Edge to Cloud particles -->
             <circle class="flow-particle moving-particle particle-path7" r="4">
-                <animateMotion dur="1.5s" repeatCount="indefinite" path="M 515 710 L 600 850"/>
+                <animateMotion dur="2s" repeatCount="indefinite" path="M 515 710 L 515 850 L 600 850"/>
             </circle>
-            <circle class="flow-particle moving-particle particle-path7" r="3" style="animation-delay: 0.75s;">
-                <animateMotion dur="1.5s" repeatCount="indefinite" path="M 515 710 L 600 850" begin="0.75s"/>
+            <circle class="flow-particle moving-particle particle-path7" r="3" style="animation-delay: 1s;">
+                <animateMotion dur="2s" repeatCount="indefinite" path="M 515 710 L 515 850 L 600 850" begin="1s"/>
             </circle>
 
             <!-- Database to Cloud bidirectional particles -->
