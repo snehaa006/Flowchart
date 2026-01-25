@@ -24,7 +24,7 @@
         .container {
             position: relative;
             width: 900px;
-            height: 1000px;
+            height: 1100px;
         }
 
         /* Main SVG for connections */
@@ -103,8 +103,9 @@
         }
 
         /* Stagger animations for each component */
-        .sensor .iso-box { animation-delay: 0s; }
-        .machine .iso-box { animation-delay: 0.5s; }
+        .press .iso-box { animation-delay: 0s; }
+        .sensor .iso-box { animation-delay: 0.3s; }
+        .machine .iso-box { animation-delay: 0.6s; }
         .digital .iso-box { animation-delay: 1s; }
         .protocol .iso-box { animation-delay: 1.5s; }
         .plc .iso-box { animation-delay: 2s; }
@@ -200,6 +201,25 @@
         }
 
         /* ========== ICON-SPECIFIC ANIMATIONS ========== */
+
+        /* Press Stamping - Press down animation */
+        @keyframes pressDown {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(3px); }
+        }
+
+        .press-head {
+            animation: pressDown 1s ease-in-out infinite;
+        }
+
+        @keyframes strokePulse {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; fill: rgba(0, 229, 255, 0.8); }
+        }
+
+        .stroke-indicator {
+            animation: strokePulse 0.8s ease-in-out infinite;
+        }
 
         /* Sensor - Signal waves expanding */
         @keyframes signalWave {
@@ -425,23 +445,26 @@
         }
 
         /* Component positions - Symmetric layout */
-        /* Top row - Input devices */
-        .sensor { top: 20px; left: 130px; }
-        .machine { top: 20px; right: 130px; }
+        /* Top - Press Stamping (stroke counter) */
+        .press { top: 20px; left: 50%; transform: translateX(-50%); }
 
-        /* Second row - Signal processing */
-        .digital { top: 210px; left: 50px; }
-        .protocol { top: 210px; right: 50px; }
+        /* Second row - Input devices */
+        .sensor { top: 140px; left: 130px; }
+        .machine { top: 140px; right: 130px; }
+
+        /* Third row - Signal processing */
+        .digital { top: 330px; left: 50px; }
+        .protocol { top: 330px; right: 50px; }
 
         /* Center row - Controller */
-        .plc { top: 400px; left: 50%; transform: translateX(-50%); }
+        .plc { top: 520px; left: 50%; transform: translateX(-50%); }
 
-        /* Fourth row - Edge processing */
-        .edge { top: 580px; left: 50%; transform: translateX(-50%); }
+        /* Fifth row - Edge processing */
+        .edge { top: 700px; left: 50%; transform: translateX(-50%); }
 
         /* Bottom row - Output/Storage */
-        .database { top: 780px; left: 170px; }
-        .cloud { top: 780px; right: 170px; }
+        .database { top: 900px; left: 170px; }
+        .cloud { top: 900px; right: 170px; }
 
         /* Subtle animations */
         @keyframes gentlePulse {
@@ -556,7 +579,7 @@
 <body>
     <div class="container">
         <!-- Connection Lines SVG -->
-        <svg class="connections-svg" viewBox="0 0 900 1000">
+        <svg class="connections-svg" viewBox="0 0 900 1120">
             <!-- Defs for arrow markers and paths -->
             <defs>
                 <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
@@ -564,114 +587,179 @@
                 </marker>
 
                 <!-- Define paths for particle animation -->
-                <path id="path-sensor-digital" d="M 195 150 L 195 230 L 115 280"/>
-                <path id="path-machine-protocol" d="M 705 150 L 705 230 L 785 280"/>
-                <path id="path-digital-plc" d="M 180 340 L 180 470 L 380 470"/>
-                <path id="path-protocol-plc" d="M 720 340 L 720 470 L 520 470"/>
-                <path id="path-plc-edge" d="M 450 530 L 450 650"/>
-                <path id="path-edge-db" d="M 385 710 L 385 850 L 300 850"/>
-                <path id="path-edge-cloud" d="M 515 710 L 515 850 L 600 850"/>
+                <path id="path-press-sensor" d="M 400 150 L 300 200 L 195 210"/>
+                <path id="path-press-machine" d="M 500 150 L 600 200 L 705 210"/>
+                <path id="path-sensor-digital" d="M 195 270 L 195 350 L 115 400"/>
+                <path id="path-machine-protocol" d="M 705 270 L 705 350 L 785 400"/>
+                <path id="path-digital-plc" d="M 180 460 L 180 590 L 380 590"/>
+                <path id="path-protocol-plc" d="M 720 460 L 720 590 L 520 590"/>
+                <path id="path-plc-edge" d="M 450 650 L 450 770"/>
+                <path id="path-edge-db" d="M 385 830 L 385 970 L 300 970"/>
+                <path id="path-edge-cloud" d="M 515 830 L 515 970 L 600 970"/>
             </defs>
 
+            <!-- Press Stamping to Sensor (stroke data) -->
+            <path class="flow-line" d="M 400 150 L 300 200 L 195 210" marker-end="url(#arrow)"/>
+
+            <!-- Press Stamping to Machine (stroke data) -->
+            <path class="flow-line" d="M 500 150 L 600 200 L 705 210" marker-end="url(#arrow)"/>
+
             <!-- Sensor down to Digital -->
-            <path class="flow-line" d="M 195 150 L 195 230 L 115 280" marker-end="url(#arrow)"/>
+            <path class="flow-line" d="M 195 270 L 195 350 L 115 400" marker-end="url(#arrow)"/>
 
             <!-- Machine down to Protocol -->
-            <path class="flow-line" d="M 705 150 L 705 230 L 785 280" marker-end="url(#arrow)"/>
+            <path class="flow-line" d="M 705 270 L 705 350 L 785 400" marker-end="url(#arrow)"/>
 
             <!-- Digital to PLC (rectilinear) -->
-            <path class="flow-line" d="M 180 340 L 180 470 L 380 470" marker-end="url(#arrow)"/>
+            <path class="flow-line" d="M 180 460 L 180 590 L 380 590" marker-end="url(#arrow)"/>
 
             <!-- Protocol to PLC (rectilinear) -->
-            <path class="flow-line" d="M 720 340 L 720 470 L 520 470" marker-end="url(#arrow)"/>
+            <path class="flow-line" d="M 720 460 L 720 590 L 520 590" marker-end="url(#arrow)"/>
 
             <!-- PLC down to Edge -->
-            <line class="flow-line-vertical" x1="450" y1="530" x2="450" y2="650" marker-end="url(#arrow)"/>
+            <line class="flow-line-vertical" x1="450" y1="650" x2="450" y2="770" marker-end="url(#arrow)"/>
 
             <!-- Edge to Database (rectilinear) -->
-            <path class="flow-line" d="M 385 710 L 385 850 L 300 850" marker-end="url(#arrow)"/>
+            <path class="flow-line" d="M 385 830 L 385 970 L 300 970" marker-end="url(#arrow)"/>
 
             <!-- Edge to Cloud (rectilinear) -->
-            <path class="flow-line" d="M 515 710 L 515 850 L 600 850" marker-end="url(#arrow)"/>
+            <path class="flow-line" d="M 515 830 L 515 970 L 600 970" marker-end="url(#arrow)"/>
 
             <!-- Database to Cloud horizontal -->
-            <line class="flow-line" x1="300" y1="920" x2="600" y2="920"/>
+            <line class="flow-line" x1="300" y1="1040" x2="600" y2="1040"/>
 
             <!-- Animated data particles along paths -->
+            <!-- Press Stamping to Sensor particles (stroke data) -->
+            <circle class="flow-particle moving-particle" r="4">
+                <animateMotion dur="1.8s" repeatCount="indefinite" path="M 400 150 L 300 200 L 195 210"/>
+            </circle>
+            <circle class="flow-particle moving-particle" r="3" style="animation-delay: 0.9s;">
+                <animateMotion dur="1.8s" repeatCount="indefinite" path="M 400 150 L 300 200 L 195 210" begin="0.9s"/>
+            </circle>
+
+            <!-- Press Stamping to Machine particles (stroke data) -->
+            <circle class="flow-particle moving-particle" r="4">
+                <animateMotion dur="1.8s" repeatCount="indefinite" path="M 500 150 L 600 200 L 705 210"/>
+            </circle>
+            <circle class="flow-particle moving-particle" r="3" style="animation-delay: 0.9s;">
+                <animateMotion dur="1.8s" repeatCount="indefinite" path="M 500 150 L 600 200 L 705 210" begin="0.9s"/>
+            </circle>
+
             <!-- Sensor to Digital particles -->
             <circle class="flow-particle moving-particle particle-path1" r="4">
-                <animateMotion dur="2s" repeatCount="indefinite" path="M 195 150 L 195 230 L 115 280"/>
+                <animateMotion dur="2s" repeatCount="indefinite" path="M 195 270 L 195 350 L 115 400"/>
             </circle>
             <circle class="flow-particle moving-particle particle-path1" r="3" style="animation-delay: 1s;">
-                <animateMotion dur="2s" repeatCount="indefinite" path="M 195 150 L 195 230 L 115 280" begin="1s"/>
+                <animateMotion dur="2s" repeatCount="indefinite" path="M 195 270 L 195 350 L 115 400" begin="1s"/>
             </circle>
 
             <!-- Machine to Protocol particles -->
             <circle class="flow-particle moving-particle particle-path2" r="4">
-                <animateMotion dur="2s" repeatCount="indefinite" path="M 705 150 L 705 230 L 785 280"/>
+                <animateMotion dur="2s" repeatCount="indefinite" path="M 705 270 L 705 350 L 785 400"/>
             </circle>
             <circle class="flow-particle moving-particle particle-path2" r="3" style="animation-delay: 1s;">
-                <animateMotion dur="2s" repeatCount="indefinite" path="M 705 150 L 705 230 L 785 280" begin="1s"/>
+                <animateMotion dur="2s" repeatCount="indefinite" path="M 705 270 L 705 350 L 785 400" begin="1s"/>
             </circle>
 
             <!-- Digital to PLC particles -->
             <circle class="flow-particle moving-particle particle-path3" r="4">
-                <animateMotion dur="2s" repeatCount="indefinite" path="M 180 340 L 180 470 L 380 470"/>
+                <animateMotion dur="2s" repeatCount="indefinite" path="M 180 460 L 180 590 L 380 590"/>
             </circle>
             <circle class="flow-particle moving-particle particle-path3" r="3" style="animation-delay: 1s;">
-                <animateMotion dur="2s" repeatCount="indefinite" path="M 180 340 L 180 470 L 380 470" begin="1s"/>
+                <animateMotion dur="2s" repeatCount="indefinite" path="M 180 460 L 180 590 L 380 590" begin="1s"/>
             </circle>
 
             <!-- Protocol to PLC particles -->
             <circle class="flow-particle moving-particle particle-path4" r="4">
-                <animateMotion dur="2s" repeatCount="indefinite" path="M 720 340 L 720 470 L 520 470"/>
+                <animateMotion dur="2s" repeatCount="indefinite" path="M 720 460 L 720 590 L 520 590"/>
             </circle>
             <circle class="flow-particle moving-particle particle-path4" r="3" style="animation-delay: 1s;">
-                <animateMotion dur="2s" repeatCount="indefinite" path="M 720 340 L 720 470 L 520 470" begin="1s"/>
+                <animateMotion dur="2s" repeatCount="indefinite" path="M 720 460 L 720 590 L 520 590" begin="1s"/>
             </circle>
 
             <!-- PLC to Edge particles -->
             <circle class="flow-particle moving-particle particle-path5" r="4">
-                <animateMotion dur="1.5s" repeatCount="indefinite" path="M 450 530 L 450 650"/>
+                <animateMotion dur="1.5s" repeatCount="indefinite" path="M 450 650 L 450 770"/>
             </circle>
             <circle class="flow-particle moving-particle particle-path5" r="3" style="animation-delay: 0.5s;">
-                <animateMotion dur="1.5s" repeatCount="indefinite" path="M 450 530 L 450 650" begin="0.5s"/>
+                <animateMotion dur="1.5s" repeatCount="indefinite" path="M 450 650 L 450 770" begin="0.5s"/>
             </circle>
             <circle class="flow-particle moving-particle particle-path5" r="2" style="animation-delay: 1s;">
-                <animateMotion dur="1.5s" repeatCount="indefinite" path="M 450 530 L 450 650" begin="1s"/>
+                <animateMotion dur="1.5s" repeatCount="indefinite" path="M 450 650 L 450 770" begin="1s"/>
             </circle>
 
             <!-- Edge to Database particles -->
             <circle class="flow-particle moving-particle particle-path6" r="4">
-                <animateMotion dur="2s" repeatCount="indefinite" path="M 385 710 L 385 850 L 300 850"/>
+                <animateMotion dur="2s" repeatCount="indefinite" path="M 385 830 L 385 970 L 300 970"/>
             </circle>
             <circle class="flow-particle moving-particle particle-path6" r="3" style="animation-delay: 1s;">
-                <animateMotion dur="2s" repeatCount="indefinite" path="M 385 710 L 385 850 L 300 850" begin="1s"/>
+                <animateMotion dur="2s" repeatCount="indefinite" path="M 385 830 L 385 970 L 300 970" begin="1s"/>
             </circle>
 
             <!-- Edge to Cloud particles -->
             <circle class="flow-particle moving-particle particle-path7" r="4">
-                <animateMotion dur="2s" repeatCount="indefinite" path="M 515 710 L 515 850 L 600 850"/>
+                <animateMotion dur="2s" repeatCount="indefinite" path="M 515 830 L 515 970 L 600 970"/>
             </circle>
             <circle class="flow-particle moving-particle particle-path7" r="3" style="animation-delay: 1s;">
-                <animateMotion dur="2s" repeatCount="indefinite" path="M 515 710 L 515 850 L 600 850" begin="1s"/>
+                <animateMotion dur="2s" repeatCount="indefinite" path="M 515 830 L 515 970 L 600 970" begin="1s"/>
             </circle>
 
             <!-- Database to Cloud bidirectional particles -->
             <circle class="flow-particle" r="3">
-                <animateMotion dur="3s" repeatCount="indefinite" path="M 300 920 L 600 920"/>
+                <animateMotion dur="3s" repeatCount="indefinite" path="M 300 1040 L 600 1040"/>
             </circle>
             <circle class="flow-particle" r="3">
-                <animateMotion dur="3s" repeatCount="indefinite" path="M 600 920 L 300 920" begin="1.5s"/>
+                <animateMotion dur="3s" repeatCount="indefinite" path="M 600 1040 L 300 1040" begin="1.5s"/>
             </circle>
 
             <!-- Binary data annotations -->
-            <text class="binary-text" x="200" y="180" style="animation-delay: 0s;">10110</text>
-            <text class="binary-text" x="700" y="180" style="animation-delay: 0.5s;">01101</text>
-            <text class="binary-text" x="280" y="400" style="animation-delay: 1s;">11010</text>
-            <text class="binary-text" x="620" y="400" style="animation-delay: 1.5s;">00111</text>
-            <text class="binary-text" x="460" y="590" style="animation-delay: 2s;">10101</text>
+            <text class="binary-text" x="350" y="120" style="animation-delay: 0s;">STROKE</text>
+            <text class="binary-text" x="200" y="300" style="animation-delay: 0.3s;">10110</text>
+            <text class="binary-text" x="700" y="300" style="animation-delay: 0.5s;">01101</text>
+            <text class="binary-text" x="280" y="520" style="animation-delay: 1s;">11010</text>
+            <text class="binary-text" x="620" y="520" style="animation-delay: 1.5s;">00111</text>
+            <text class="binary-text" x="460" y="710" style="animation-delay: 2s;">10101</text>
         </svg>
+
+        <!-- Press Stamping Component -->
+        <div class="component press">
+            <div class="iso-box">
+                <svg viewBox="0 0 130 130">
+                    <!-- Isometric cube -->
+                    <polygon class="iso-fill" points="25,45 65,25 105,45 105,95 65,115 25,95"/>
+                    <path class="iso-outline" d="M 25 45 L 65 25 L 105 45 L 105 95 L 65 115 L 25 95 Z"/>
+                    <path class="iso-outline" d="M 25 45 L 65 65 L 105 45"/>
+                    <path class="iso-outline" d="M 65 65 L 65 115"/>
+                    <!-- Internal detail lines -->
+                    <line class="iso-detail" x1="45" y1="55" x2="45" y2="85"/>
+                    <line class="iso-detail" x1="85" y1="55" x2="85" y2="85"/>
+                </svg>
+                <div class="circle-zone">
+                    <svg class="icon-svg" viewBox="0 0 45 45">
+                        <!-- Press Stamping Machine Icon -->
+                        <!-- Press frame/housing -->
+                        <rect class="icon-fill" x="10" y="28" width="25" height="8" rx="1"/>
+                        <!-- Press columns -->
+                        <line class="icon-line" x1="12" y1="12" x2="12" y2="28"/>
+                        <line class="icon-line" x1="33" y1="12" x2="33" y2="28"/>
+                        <!-- Top beam -->
+                        <rect class="icon-fill" x="10" y="8" width="25" height="5" rx="1"/>
+                        <!-- Press head (animated) -->
+                        <g class="press-head">
+                            <rect class="icon-fill" x="17" y="13" width="11" height="8" rx="1"/>
+                            <!-- Stamping die -->
+                            <rect class="icon-line stroke-indicator" x="19" y="21" width="7" height="3" rx="0.5"/>
+                        </g>
+                        <!-- Workpiece/base plate -->
+                        <rect class="icon-line" x="17" y="25" width="11" height="3" rx="0.5"/>
+                        <!-- Stroke counter indicator -->
+                        <circle class="icon-fill stroke-indicator" cx="37" cy="12" r="3"/>
+                        <text x="36" y="13.5" font-size="4" fill="rgba(255,255,255,0.9)" font-family="monospace">N</text>
+                    </svg>
+                </div>
+            </div>
+            <div class="label">Press Stamping<div class="sublabel">stroke counter</div></div>
+        </div>
 
         <!-- Sensor Component -->
         <div class="component sensor">
