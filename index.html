@@ -55,6 +55,16 @@
             opacity: 0.7;
         }
 
+        /* Animated dash flow effect on lines */
+        @keyframes dashFlow {
+            0% { stroke-dashoffset: 20; }
+            100% { stroke-dashoffset: 0; }
+        }
+
+        .flow-line, .flow-line-vertical {
+            animation: dashFlow 1s linear infinite;
+        }
+
         /* Arrow markers */
         .arrow-marker {
             fill: #c9a227;
@@ -75,12 +85,32 @@
             z-index: 2;
         }
 
-        /* Isometric box - cleaner design */
+        /* Isometric box - cleaner design with subtle animation */
         .iso-box {
             position: relative;
             width: 130px;
             height: 130px;
         }
+
+        /* Subtle floating animation for boxes */
+        @keyframes floatBox {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-3px); }
+        }
+
+        .iso-box {
+            animation: floatBox 4s ease-in-out infinite;
+        }
+
+        /* Stagger animations for each component */
+        .sensor .iso-box { animation-delay: 0s; }
+        .machine .iso-box { animation-delay: 0.5s; }
+        .digital .iso-box { animation-delay: 1s; }
+        .protocol .iso-box { animation-delay: 1.5s; }
+        .plc .iso-box { animation-delay: 2s; }
+        .edge .iso-box { animation-delay: 2.5s; }
+        .database .iso-box { animation-delay: 3s; }
+        .cloud .iso-box { animation-delay: 3.5s; }
 
         .iso-box svg {
             width: 100%;
@@ -107,6 +137,16 @@
             opacity: 0.3;
         }
 
+        /* Pulsing glow effect on boxes */
+        @keyframes boxGlow {
+            0%, 100% { filter: drop-shadow(0 0 2px rgba(201, 162, 39, 0.3)); }
+            50% { filter: drop-shadow(0 0 8px rgba(201, 162, 39, 0.6)); }
+        }
+
+        .iso-box > svg {
+            animation: boxGlow 3s ease-in-out infinite;
+        }
+
         /* Circle zone inside box */
         .circle-zone {
             position: absolute;
@@ -122,6 +162,22 @@
             align-items: center;
             justify-content: center;
             overflow: visible;
+        }
+
+        /* Circle zone pulse */
+        @keyframes circlePulse {
+            0%, 100% {
+                border-color: rgba(201, 162, 39, 0.6);
+                box-shadow: 0 0 5px rgba(201, 162, 39, 0.2);
+            }
+            50% {
+                border-color: rgba(201, 162, 39, 0.9);
+                box-shadow: 0 0 15px rgba(201, 162, 39, 0.4);
+            }
+        }
+
+        .circle-zone {
+            animation: circlePulse 2.5s ease-in-out infinite;
         }
 
         .icon-svg {
@@ -141,6 +197,213 @@
             fill: rgba(255, 255, 255, 0.15);
             stroke: rgba(255, 255, 255, 0.85);
             stroke-width: 1.5;
+        }
+
+        /* ========== ICON-SPECIFIC ANIMATIONS ========== */
+
+        /* Sensor - Signal waves expanding */
+        @keyframes signalWave {
+            0% { opacity: 0.3; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.1); }
+            100% { opacity: 0.3; transform: scale(0.8); }
+        }
+
+        .sensor-wave-left {
+            transform-origin: 13px 22.5px;
+            animation: signalWave 1.5s ease-in-out infinite;
+        }
+
+        .sensor-wave-right {
+            transform-origin: 32px 22.5px;
+            animation: signalWave 1.5s ease-in-out infinite;
+            animation-delay: 0.3s;
+        }
+
+        /* Sensor antenna blink */
+        @keyframes antennaBlink {
+            0%, 100% { fill: rgba(255, 255, 255, 0.15); }
+            50% { fill: rgba(201, 162, 39, 0.8); }
+        }
+
+        .sensor-antenna {
+            animation: antennaBlink 1s ease-in-out infinite;
+        }
+
+        /* Machine - Display lines updating */
+        @keyframes dataUpdate {
+            0% { stroke-dashoffset: 20; opacity: 0.5; }
+            50% { stroke-dashoffset: 0; opacity: 1; }
+            100% { stroke-dashoffset: -20; opacity: 0.5; }
+        }
+
+        .machine-display-line {
+            stroke-dasharray: 20;
+            animation: dataUpdate 2s linear infinite;
+        }
+
+        .machine-display-line:nth-child(2) {
+            animation-delay: 0.3s;
+        }
+
+        /* Digital/Analog - Waveform animation */
+        @keyframes waveformMove {
+            0% { transform: translateX(-3px); }
+            50% { transform: translateX(3px); }
+            100% { transform: translateX(-3px); }
+        }
+
+        .waveform-path {
+            animation: waveformMove 1.5s ease-in-out infinite;
+        }
+
+        /* Screen flicker effect */
+        @keyframes screenFlicker {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 1; }
+            75% { opacity: 0.9; }
+        }
+
+        .digital .icon-svg {
+            animation: screenFlicker 0.5s ease-in-out infinite;
+        }
+
+        /* Protocol - Network nodes pulsing */
+        @keyframes nodePulse {
+            0%, 100% {
+                r: 4;
+                fill: rgba(255, 255, 255, 0.15);
+            }
+            50% {
+                r: 5;
+                fill: rgba(201, 162, 39, 0.6);
+            }
+        }
+
+        .protocol-node {
+            animation: nodePulse 1.2s ease-in-out infinite;
+        }
+
+        .protocol-node:nth-child(1) { animation-delay: 0s; }
+        .protocol-node:nth-child(2) { animation-delay: 0.3s; }
+        .protocol-node:nth-child(3) { animation-delay: 0.6s; }
+        .protocol-node:nth-child(4) { animation-delay: 0.9s; }
+
+        /* Protocol connection data flow */
+        @keyframes dataFlowLine {
+            0% { stroke-dashoffset: 30; }
+            100% { stroke-dashoffset: 0; }
+        }
+
+        .protocol-line {
+            stroke-dasharray: 4, 3;
+            animation: dataFlowLine 1s linear infinite;
+        }
+
+        /* PLC - Chip lights blinking */
+        @keyframes chipBlink {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+
+        .plc-pin {
+            animation: chipBlink 0.8s ease-in-out infinite;
+        }
+
+        .plc-pin:nth-child(1) { animation-delay: 0s; }
+        .plc-pin:nth-child(2) { animation-delay: 0.1s; }
+        .plc-pin:nth-child(3) { animation-delay: 0.2s; }
+        .plc-pin:nth-child(4) { animation-delay: 0.3s; }
+        .plc-pin:nth-child(5) { animation-delay: 0.4s; }
+        .plc-pin:nth-child(6) { animation-delay: 0.5s; }
+        .plc-pin:nth-child(7) { animation-delay: 0.6s; }
+        .plc-pin:nth-child(8) { animation-delay: 0.7s; }
+        .plc-pin:nth-child(9) { animation-delay: 0.8s; }
+        .plc-pin:nth-child(10) { animation-delay: 0.9s; }
+
+        /* PLC core pulse */
+        @keyframes corePulse {
+            0%, 100% {
+                fill: rgba(255, 255, 255, 0.15);
+                stroke: rgba(255, 255, 255, 0.85);
+            }
+            50% {
+                fill: rgba(201, 162, 39, 0.4);
+                stroke: rgba(201, 162, 39, 1);
+            }
+        }
+
+        .plc-core {
+            animation: corePulse 2s ease-in-out infinite;
+        }
+
+        /* Edge Device - Gear rotation */
+        @keyframes gearRotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .edge .icon-svg {
+            animation: gearRotate 8s linear infinite;
+        }
+
+        /* Edge gear inner pulse */
+        @keyframes innerGearPulse {
+            0%, 100% { fill: rgba(255, 255, 255, 0.15); }
+            50% { fill: rgba(201, 162, 39, 0.5); }
+        }
+
+        .gear-inner {
+            animation: innerGearPulse 1.5s ease-in-out infinite;
+        }
+
+        /* Database - Data layers animation */
+        @keyframes dbLayerPulse {
+            0%, 100% { opacity: 0.4; transform: translateY(0); }
+            50% { opacity: 0.8; transform: translateY(-1px); }
+        }
+
+        .db-layer {
+            animation: dbLayerPulse 2s ease-in-out infinite;
+        }
+
+        .db-layer:nth-child(1) { animation-delay: 0s; }
+        .db-layer:nth-child(2) { animation-delay: 0.3s; }
+
+        /* Database data write effect */
+        @keyframes dataWrite {
+            0% { stroke-dashoffset: 24; }
+            100% { stroke-dashoffset: 0; }
+        }
+
+        .db-side {
+            stroke-dasharray: 24;
+            animation: dataWrite 1.5s linear infinite;
+        }
+
+        /* Cloud - Floating and data sync */
+        @keyframes cloudFloat {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-2px) scale(1.02); }
+        }
+
+        .cloud-shape {
+            animation: cloudFloat 3s ease-in-out infinite;
+        }
+
+        /* Cloud data lines */
+        @keyframes cloudData {
+            0% { stroke-dashoffset: 16; opacity: 0.5; }
+            50% { stroke-dashoffset: 0; opacity: 1; }
+            100% { stroke-dashoffset: -16; opacity: 0.5; }
+        }
+
+        .cloud-data-line {
+            stroke-dasharray: 16;
+            animation: cloudData 1.5s linear infinite;
+        }
+
+        .cloud-data-line:nth-child(2) {
+            animation-delay: 0.3s;
         }
 
         /* Labels */
@@ -223,21 +486,70 @@
             border-top: 6px solid rgba(201, 162, 39, 0.5);
         }
 
-        /* Flow particles */
-        @keyframes flowDown {
-            0% { opacity: 0; transform: translateY(0); }
-            20% { opacity: 1; }
-            80% { opacity: 1; }
-            100% { opacity: 0; transform: translateY(30px); }
+        /* Flow particles moving along paths */
+        @keyframes flowParticle1 {
+            0% { offset-distance: 0%; opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { offset-distance: 100%; opacity: 0; }
         }
 
         .flow-particle {
             fill: #c9a227;
-            filter: drop-shadow(0 0 4px rgba(201, 162, 39, 0.5));
+            filter: drop-shadow(0 0 4px rgba(201, 162, 39, 0.8));
         }
 
-        .flow-particle-animate {
-            animation: flowDown 2s ease-in-out infinite;
+        /* Animated particles along paths */
+        .moving-particle {
+            offset-rotate: 0deg;
+            animation: flowParticle1 2s linear infinite;
+        }
+
+        /* Different timing for each path */
+        .particle-path1 { animation-delay: 0s; }
+        .particle-path2 { animation-delay: 0.5s; }
+        .particle-path3 { animation-delay: 1s; }
+        .particle-path4 { animation-delay: 1.5s; }
+        .particle-path5 { animation-delay: 0.3s; }
+        .particle-path6 { animation-delay: 0.8s; }
+        .particle-path7 { animation-delay: 1.3s; }
+
+        /* Data stream effect on main connections */
+        @keyframes dataStream {
+            0% {
+                opacity: 0;
+                transform: scale(0.5);
+            }
+            20% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            80% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: scale(0.5);
+            }
+        }
+
+        .data-dot {
+            fill: #c9a227;
+            filter: drop-shadow(0 0 6px rgba(201, 162, 39, 0.9));
+        }
+
+        /* Binary data visualization near components */
+        @keyframes binaryFade {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 0.6; }
+        }
+
+        .binary-text {
+            font-family: monospace;
+            font-size: 6px;
+            fill: rgba(201, 162, 39, 0.5);
+            animation: binaryFade 2s ease-in-out infinite;
         }
     </style>
 </head>
@@ -245,15 +557,21 @@
     <div class="container">
         <!-- Connection Lines SVG -->
         <svg class="connections-svg" viewBox="0 0 900 1000">
-            <!-- Defs for arrow markers -->
+            <!-- Defs for arrow markers and paths -->
             <defs>
                 <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
                     <polygon points="0 0, 8 3, 0 6" fill="#c9a227" opacity="0.8"/>
                 </marker>
-            </defs>
 
-            <!-- Vertical spine line (center) -->
-            <line class="flow-line-vertical" x1="450" y1="520" x2="450" y2="650" marker-end="url(#arrow)"/>
+                <!-- Define paths for particle animation -->
+                <path id="path-sensor-digital" d="M 195 150 L 195 230 L 115 280"/>
+                <path id="path-machine-protocol" d="M 705 150 L 705 230 L 785 280"/>
+                <path id="path-digital-plc" d="M 180 340 L 380 470"/>
+                <path id="path-protocol-plc" d="M 720 340 L 520 470"/>
+                <path id="path-plc-edge" d="M 450 530 L 450 650"/>
+                <path id="path-edge-db" d="M 385 710 L 300 850"/>
+                <path id="path-edge-cloud" d="M 515 710 L 600 850"/>
+            </defs>
 
             <!-- Sensor down to Digital -->
             <path class="flow-line" d="M 195 150 L 195 230 L 115 280" marker-end="url(#arrow)"/>
@@ -279,11 +597,80 @@
             <!-- Database to Cloud horizontal -->
             <line class="flow-line" x1="300" y1="920" x2="600" y2="920"/>
 
-            <!-- Flow direction indicators (animated dots) -->
-            <circle class="flow-particle pulse-subtle" cx="195" cy="190" r="3"/>
-            <circle class="flow-particle pulse-subtle" cx="705" cy="190" r="3" style="animation-delay: 0.5s"/>
-            <circle class="flow-particle pulse-subtle" cx="450" cy="590" r="3" style="animation-delay: 1s"/>
-            <circle class="flow-particle pulse-subtle" cx="450" cy="920" r="3" style="animation-delay: 1.5s"/>
+            <!-- Animated data particles along paths -->
+            <!-- Sensor to Digital particles -->
+            <circle class="flow-particle moving-particle particle-path1" r="4">
+                <animateMotion dur="2s" repeatCount="indefinite" path="M 195 150 L 195 230 L 115 280"/>
+            </circle>
+            <circle class="flow-particle moving-particle particle-path1" r="3" style="animation-delay: 1s;">
+                <animateMotion dur="2s" repeatCount="indefinite" path="M 195 150 L 195 230 L 115 280" begin="1s"/>
+            </circle>
+
+            <!-- Machine to Protocol particles -->
+            <circle class="flow-particle moving-particle particle-path2" r="4">
+                <animateMotion dur="2s" repeatCount="indefinite" path="M 705 150 L 705 230 L 785 280"/>
+            </circle>
+            <circle class="flow-particle moving-particle particle-path2" r="3" style="animation-delay: 1s;">
+                <animateMotion dur="2s" repeatCount="indefinite" path="M 705 150 L 705 230 L 785 280" begin="1s"/>
+            </circle>
+
+            <!-- Digital to PLC particles -->
+            <circle class="flow-particle moving-particle particle-path3" r="4">
+                <animateMotion dur="1.5s" repeatCount="indefinite" path="M 180 340 L 380 470"/>
+            </circle>
+            <circle class="flow-particle moving-particle particle-path3" r="3" style="animation-delay: 0.75s;">
+                <animateMotion dur="1.5s" repeatCount="indefinite" path="M 180 340 L 380 470" begin="0.75s"/>
+            </circle>
+
+            <!-- Protocol to PLC particles -->
+            <circle class="flow-particle moving-particle particle-path4" r="4">
+                <animateMotion dur="1.5s" repeatCount="indefinite" path="M 720 340 L 520 470"/>
+            </circle>
+            <circle class="flow-particle moving-particle particle-path4" r="3" style="animation-delay: 0.75s;">
+                <animateMotion dur="1.5s" repeatCount="indefinite" path="M 720 340 L 520 470" begin="0.75s"/>
+            </circle>
+
+            <!-- PLC to Edge particles -->
+            <circle class="flow-particle moving-particle particle-path5" r="4">
+                <animateMotion dur="1.5s" repeatCount="indefinite" path="M 450 530 L 450 650"/>
+            </circle>
+            <circle class="flow-particle moving-particle particle-path5" r="3" style="animation-delay: 0.5s;">
+                <animateMotion dur="1.5s" repeatCount="indefinite" path="M 450 530 L 450 650" begin="0.5s"/>
+            </circle>
+            <circle class="flow-particle moving-particle particle-path5" r="2" style="animation-delay: 1s;">
+                <animateMotion dur="1.5s" repeatCount="indefinite" path="M 450 530 L 450 650" begin="1s"/>
+            </circle>
+
+            <!-- Edge to Database particles -->
+            <circle class="flow-particle moving-particle particle-path6" r="4">
+                <animateMotion dur="1.5s" repeatCount="indefinite" path="M 385 710 L 300 850"/>
+            </circle>
+            <circle class="flow-particle moving-particle particle-path6" r="3" style="animation-delay: 0.75s;">
+                <animateMotion dur="1.5s" repeatCount="indefinite" path="M 385 710 L 300 850" begin="0.75s"/>
+            </circle>
+
+            <!-- Edge to Cloud particles -->
+            <circle class="flow-particle moving-particle particle-path7" r="4">
+                <animateMotion dur="1.5s" repeatCount="indefinite" path="M 515 710 L 600 850"/>
+            </circle>
+            <circle class="flow-particle moving-particle particle-path7" r="3" style="animation-delay: 0.75s;">
+                <animateMotion dur="1.5s" repeatCount="indefinite" path="M 515 710 L 600 850" begin="0.75s"/>
+            </circle>
+
+            <!-- Database to Cloud bidirectional particles -->
+            <circle class="flow-particle" r="3">
+                <animateMotion dur="3s" repeatCount="indefinite" path="M 300 920 L 600 920"/>
+            </circle>
+            <circle class="flow-particle" r="3">
+                <animateMotion dur="3s" repeatCount="indefinite" path="M 600 920 L 300 920" begin="1.5s"/>
+            </circle>
+
+            <!-- Binary data annotations -->
+            <text class="binary-text" x="200" y="180" style="animation-delay: 0s;">10110</text>
+            <text class="binary-text" x="700" y="180" style="animation-delay: 0.5s;">01101</text>
+            <text class="binary-text" x="280" y="400" style="animation-delay: 1s;">11010</text>
+            <text class="binary-text" x="620" y="400" style="animation-delay: 1.5s;">00111</text>
+            <text class="binary-text" x="460" y="590" style="animation-delay: 2s;">10101</text>
         </svg>
 
         <!-- Sensor Component -->
@@ -304,10 +691,12 @@
                         <!-- Sensor with antenna -->
                         <rect class="icon-fill" x="17" y="18" width="11" height="14" rx="2"/>
                         <line class="icon-line" x1="22.5" y1="8" x2="22.5" y2="18"/>
-                        <circle class="icon-line" cx="22.5" cy="6" r="2"/>
-                        <!-- Signal waves -->
-                        <path class="icon-line" d="M 13 20 Q 8 22.5 13 25" fill="none"/>
-                        <path class="icon-line" d="M 32 20 Q 37 22.5 32 25" fill="none"/>
+                        <circle class="icon-fill sensor-antenna" cx="22.5" cy="6" r="2"/>
+                        <!-- Signal waves - animated -->
+                        <path class="icon-line sensor-wave-left" d="M 13 20 Q 8 22.5 13 25" fill="none"/>
+                        <path class="icon-line sensor-wave-left" d="M 10 18 Q 3 22.5 10 27" fill="none" style="animation-delay: 0.2s;"/>
+                        <path class="icon-line sensor-wave-right" d="M 32 20 Q 37 22.5 32 25" fill="none"/>
+                        <path class="icon-line sensor-wave-right" d="M 35 18 Q 42 22.5 35 27" fill="none" style="animation-delay: 0.2s;"/>
                     </svg>
                 </div>
             </div>
@@ -329,8 +718,10 @@
                     <svg class="icon-svg" viewBox="0 0 45 45">
                         <!-- Meter/Machine display -->
                         <rect class="icon-fill" x="10" y="12" width="25" height="18" rx="2"/>
-                        <line class="icon-line" x1="14" y1="18" x2="31" y2="18"/>
-                        <line class="icon-line" x1="14" y1="23" x2="26" y2="23"/>
+                        <line class="icon-line machine-display-line" x1="14" y1="18" x2="31" y2="18"/>
+                        <line class="icon-line machine-display-line" x1="14" y1="23" x2="26" y2="23"/>
+                        <!-- Activity indicator -->
+                        <circle class="icon-fill sensor-antenna" cx="29" cy="24" r="2"/>
                         <!-- Legs -->
                         <line class="icon-line" x1="14" y1="30" x2="14" y2="36"/>
                         <line class="icon-line" x1="31" y1="30" x2="31" y2="36"/>
@@ -353,8 +744,16 @@
                     <svg class="icon-svg" viewBox="0 0 45 45">
                         <!-- Laptop/Signal processor -->
                         <rect class="icon-fill" x="8" y="14" width="29" height="18" rx="2"/>
-                        <!-- Screen content - waveform -->
-                        <path class="icon-line" d="M 12 23 L 16 18 L 20 26 L 24 20 L 28 24 L 33 21"/>
+                        <!-- Screen content - waveform animated -->
+                        <g class="waveform-path">
+                            <path class="icon-line" d="M 12 23 L 16 18 L 20 26 L 24 20 L 28 24 L 33 21"/>
+                        </g>
+                        <!-- Scan line effect -->
+                        <line class="icon-line" x1="12" y1="27" x2="33" y2="27" opacity="0.3">
+                            <animate attributeName="y1" values="16;28;16" dur="2s" repeatCount="indefinite"/>
+                            <animate attributeName="y2" values="16;28;16" dur="2s" repeatCount="indefinite"/>
+                            <animate attributeName="opacity" values="0.1;0.5;0.1" dur="2s" repeatCount="indefinite"/>
+                        </line>
                         <!-- Keyboard base -->
                         <path class="icon-line" d="M 5 32 L 8 28 L 37 28 L 40 32 Z" fill="none"/>
                     </svg>
@@ -374,16 +773,16 @@
                 </svg>
                 <div class="circle-zone">
                     <svg class="icon-svg" viewBox="0 0 45 45">
-                        <!-- Network nodes -->
-                        <circle class="icon-fill" cx="22.5" cy="10" r="4"/>
-                        <circle class="icon-fill" cx="10" cy="28" r="4"/>
-                        <circle class="icon-fill" cx="35" cy="28" r="4"/>
-                        <circle class="icon-fill" cx="22.5" cy="38" r="4"/>
-                        <!-- Connection lines -->
-                        <line class="icon-line" x1="22.5" y1="14" x2="12" y2="25"/>
-                        <line class="icon-line" x1="22.5" y1="14" x2="33" y2="25"/>
-                        <line class="icon-line" x1="12" y1="31" x2="20" y2="36"/>
-                        <line class="icon-line" x1="33" y1="31" x2="25" y2="36"/>
+                        <!-- Network nodes - animated -->
+                        <circle class="icon-fill protocol-node" cx="22.5" cy="10" r="4"/>
+                        <circle class="icon-fill protocol-node" cx="10" cy="28" r="4"/>
+                        <circle class="icon-fill protocol-node" cx="35" cy="28" r="4"/>
+                        <circle class="icon-fill protocol-node" cx="22.5" cy="38" r="4"/>
+                        <!-- Connection lines - animated data flow -->
+                        <line class="icon-line protocol-line" x1="22.5" y1="14" x2="12" y2="25"/>
+                        <line class="icon-line protocol-line" x1="22.5" y1="14" x2="33" y2="25" style="animation-delay: 0.25s;"/>
+                        <line class="icon-line protocol-line" x1="12" y1="31" x2="20" y2="36" style="animation-delay: 0.5s;"/>
+                        <line class="icon-line protocol-line" x1="33" y1="31" x2="25" y2="36" style="animation-delay: 0.75s;"/>
                     </svg>
                 </div>
             </div>
@@ -405,22 +804,24 @@
                 </svg>
                 <div class="circle-zone">
                     <svg class="icon-svg" viewBox="0 0 45 45">
-                        <!-- PLC chip -->
-                        <rect class="icon-fill" x="12" y="12" width="21" height="21" rx="2"/>
-                        <!-- Pins top -->
-                        <line class="icon-line" x1="17" y1="6" x2="17" y2="12"/>
-                        <line class="icon-line" x1="22.5" y1="6" x2="22.5" y2="12"/>
-                        <line class="icon-line" x1="28" y1="6" x2="28" y2="12"/>
-                        <!-- Pins bottom -->
-                        <line class="icon-line" x1="17" y1="33" x2="17" y2="39"/>
-                        <line class="icon-line" x1="22.5" y1="33" x2="22.5" y2="39"/>
-                        <line class="icon-line" x1="28" y1="33" x2="28" y2="39"/>
-                        <!-- Pins left -->
-                        <line class="icon-line" x1="6" y1="18" x2="12" y2="18"/>
-                        <line class="icon-line" x1="6" y1="27" x2="12" y2="27"/>
-                        <!-- Pins right -->
-                        <line class="icon-line" x1="33" y1="18" x2="39" y2="18"/>
-                        <line class="icon-line" x1="33" y1="27" x2="39" y2="27"/>
+                        <!-- PLC chip - core with pulse animation -->
+                        <rect class="icon-fill plc-core" x="12" y="12" width="21" height="21" rx="2"/>
+                        <!-- Pins top - animated -->
+                        <line class="icon-line plc-pin" x1="17" y1="6" x2="17" y2="12"/>
+                        <line class="icon-line plc-pin" x1="22.5" y1="6" x2="22.5" y2="12"/>
+                        <line class="icon-line plc-pin" x1="28" y1="6" x2="28" y2="12"/>
+                        <!-- Pins bottom - animated -->
+                        <line class="icon-line plc-pin" x1="17" y1="33" x2="17" y2="39"/>
+                        <line class="icon-line plc-pin" x1="22.5" y1="33" x2="22.5" y2="39"/>
+                        <line class="icon-line plc-pin" x1="28" y1="33" x2="28" y2="39"/>
+                        <!-- Pins left - animated -->
+                        <line class="icon-line plc-pin" x1="6" y1="18" x2="12" y2="18"/>
+                        <line class="icon-line plc-pin" x1="6" y1="27" x2="12" y2="27"/>
+                        <!-- Pins right - animated -->
+                        <line class="icon-line plc-pin" x1="33" y1="18" x2="39" y2="18"/>
+                        <line class="icon-line plc-pin" x1="33" y1="27" x2="39" y2="27"/>
+                        <!-- Inner activity indicator -->
+                        <circle class="icon-fill sensor-antenna" cx="22.5" cy="22.5" r="3"/>
                     </svg>
                 </div>
             </div>
@@ -438,14 +839,19 @@
                 </svg>
                 <div class="circle-zone">
                     <svg class="icon-svg" viewBox="0 0 45 45">
-                        <!-- Edge device with gear -->
+                        <!-- Edge device with rotating gear -->
                         <circle class="icon-line" cx="22.5" cy="22.5" r="10"/>
-                        <circle class="icon-fill" cx="22.5" cy="22.5" r="5"/>
+                        <circle class="icon-fill gear-inner" cx="22.5" cy="22.5" r="5"/>
                         <!-- Gear teeth -->
                         <line class="icon-line" x1="22.5" y1="6" x2="22.5" y2="12"/>
                         <line class="icon-line" x1="22.5" y1="33" x2="22.5" y2="39"/>
                         <line class="icon-line" x1="6" y1="22.5" x2="12" y2="22.5"/>
                         <line class="icon-line" x1="33" y1="22.5" x2="39" y2="22.5"/>
+                        <!-- Diagonal teeth -->
+                        <line class="icon-line" x1="10" y1="10" x2="14" y2="14"/>
+                        <line class="icon-line" x1="31" y1="31" x2="35" y2="35"/>
+                        <line class="icon-line" x1="31" y1="10" x2="35" y2="14"/>
+                        <line class="icon-line" x1="10" y1="31" x2="14" y2="35"/>
                     </svg>
                 </div>
             </div>
@@ -463,12 +869,24 @@
                 </svg>
                 <div class="circle-zone">
                     <svg class="icon-svg" viewBox="0 0 45 45">
-                        <!-- Database cylinder -->
-                        <ellipse class="icon-fill" cx="22.5" cy="12" rx="12" ry="5"/>
-                        <line class="icon-line" x1="10.5" y1="12" x2="10.5" y2="33"/>
-                        <line class="icon-line" x1="34.5" y1="12" x2="34.5" y2="33"/>
+                        <!-- Database cylinder with animated layers -->
+                        <ellipse class="icon-fill" cx="22.5" cy="12" rx="12" ry="5">
+                            <animate attributeName="ry" values="5;6;5" dur="2s" repeatCount="indefinite"/>
+                        </ellipse>
+                        <line class="icon-line db-side" x1="10.5" y1="12" x2="10.5" y2="33"/>
+                        <line class="icon-line db-side" x1="34.5" y1="12" x2="34.5" y2="33" style="animation-delay: 0.5s;"/>
                         <ellipse class="icon-line" cx="22.5" cy="33" rx="12" ry="5"/>
-                        <ellipse class="icon-line" cx="22.5" cy="22" rx="12" ry="5" opacity="0.4"/>
+                        <ellipse class="icon-line db-layer" cx="22.5" cy="22" rx="12" ry="5"/>
+                        <!-- Data blocks animation -->
+                        <rect class="icon-line" x="16" y="16" width="4" height="3" opacity="0.5">
+                            <animate attributeName="opacity" values="0.3;0.8;0.3" dur="1.5s" repeatCount="indefinite"/>
+                        </rect>
+                        <rect class="icon-line" x="22" y="16" width="4" height="3" opacity="0.5">
+                            <animate attributeName="opacity" values="0.3;0.8;0.3" dur="1.5s" repeatCount="indefinite" begin="0.3s"/>
+                        </rect>
+                        <rect class="icon-line" x="19" y="26" width="4" height="3" opacity="0.5">
+                            <animate attributeName="opacity" values="0.3;0.8;0.3" dur="1.5s" repeatCount="indefinite" begin="0.6s"/>
+                        </rect>
                     </svg>
                 </div>
             </div>
@@ -486,10 +904,22 @@
                 </svg>
                 <div class="circle-zone">
                     <svg class="icon-svg" viewBox="0 0 45 45">
-                        <!-- Cloud shape -->
-                        <path class="icon-fill" d="M 12 26 Q 12 19 18 19 Q 18 13 25 13 Q 32 13 32 19 Q 38 19 38 26 Q 38 33 32 33 L 18 33 Q 12 33 12 26"/>
-                        <line class="icon-line" x1="17" y1="25" x2="33" y2="25"/>
-                        <line class="icon-line" x1="19" y1="29" x2="31" y2="29"/>
+                        <!-- Cloud shape with floating animation -->
+                        <g class="cloud-shape">
+                            <path class="icon-fill" d="M 12 26 Q 12 19 18 19 Q 18 13 25 13 Q 32 13 32 19 Q 38 19 38 26 Q 38 33 32 33 L 18 33 Q 12 33 12 26"/>
+                        </g>
+                        <!-- Data sync lines - animated -->
+                        <line class="icon-line cloud-data-line" x1="17" y1="25" x2="33" y2="25"/>
+                        <line class="icon-line cloud-data-line" x1="19" y1="29" x2="31" y2="29"/>
+                        <!-- Upload/download arrows -->
+                        <g>
+                            <path class="icon-line" d="M 22 20 L 25 17 L 28 20" fill="none">
+                                <animate attributeName="opacity" values="0.3;1;0.3" dur="1s" repeatCount="indefinite"/>
+                            </path>
+                            <path class="icon-line" d="M 22 23 L 25 20 L 28 23" fill="none">
+                                <animate attributeName="opacity" values="0.3;1;0.3" dur="1s" repeatCount="indefinite" begin="0.5s"/>
+                            </path>
+                        </g>
                     </svg>
                 </div>
             </div>
