@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IIoT Flow Diagram</title>
+    <title>Press Stamping - Proximity Sensor Counter</title>
     <style>
         * {
             margin: 0;
@@ -12,472 +12,702 @@
         }
 
         body {
-            background: #3d3d3d;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-family: 'Helvetica Neue', Arial, sans-serif;
+            font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
             overflow: hidden;
         }
 
         .container {
             position: relative;
-            width: 1200px;
-            height: 1200px;
+            width: 1400px;
+            height: 800px;
         }
 
-        svg {
+        /* Main SVG for connections */
+        .main-svg {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
+            z-index: 1;
         }
 
-        .iso-component {
+        /* Component boxes */
+        .component {
             position: absolute;
-            width: 220px;
-            height: 220px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 10;
         }
 
-        .wireframe {
+        .component-box {
             position: relative;
-            width: 100%;
-            height: 100%;
-        }
-
-        .iso-svg {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            overflow: visible;
-        }
-
-        .iso-line {
-            fill: none;
-            stroke: #6b9bd1;
-            stroke-width: 2.5;
-            opacity: 0.7;
-        }
-
-        /* Inner 3D detail lines */
-        .detail-line {
-            fill: none;
-            stroke: #6b9bd1;
-            stroke-width: 1.5;
-            opacity: 0.4;
-        }
-
-        /* Circle with animated geometric content */
-        .circle-zone {
-            position: absolute;
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: radial-gradient(
-                circle at 40% 40%,
-                rgba(107, 155, 209, 0.08),
-                transparent 70%
-            );
-            border: 2.5px solid rgba(107, 155, 209, 0.6);
+            width: 280px;
+            height: 280px;
+            background: rgba(20, 30, 50, 0.8);
+            border: 2px solid rgba(100, 180, 255, 0.4);
+            border-radius: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
-            overflow: visible;
+            box-shadow:
+                0 0 30px rgba(100, 180, 255, 0.15),
+                inset 0 0 60px rgba(100, 180, 255, 0.05);
+            backdrop-filter: blur(10px);
         }
 
-        /* Animated geometric shapes inside circles */
-        .geo-svg {
-            width: 90px;
-            height: 90px;
-        }
-
-        .geo-line {
-            fill: none;
-            stroke: #8bb4e8;
-            stroke-width: 2;
-            stroke-linecap: round;
-            opacity: 0.8;
-        }
-
-        .geo-fill {
-            fill: rgba(139, 180, 232, 0.15);
-            stroke: #8bb4e8;
-            stroke-width: 1.5;
-        }
-
-        /* Animation for geometric shapes */
-        @keyframes rotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 0.6; transform: scale(0.95); }
-            50% { opacity: 1; transform: scale(1.05); }
-        }
-
-        @keyframes dashMove {
-            from { stroke-dashoffset: 0; }
-            to { stroke-dashoffset: 100; }
-        }
-
-        .animate-rotate {
-            animation: rotate 20s linear infinite;
-        }
-
-        .animate-pulse {
-            animation: pulse 3s ease-in-out infinite;
-        }
-
-        .animate-dash {
-            stroke-dasharray: 5, 5;
-            animation: dashMove 1s linear infinite;
-        }
-
-        /* Labels */
-        .label {
+        .component-box::before {
+            content: '';
             position: absolute;
-            bottom: -50px;
-            left: 50%;
-            transform: translateX(-50%);
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            border-radius: 22px;
+            background: linear-gradient(45deg,
+                rgba(100, 180, 255, 0.3),
+                transparent,
+                rgba(100, 180, 255, 0.3));
+            z-index: -1;
+            animation: borderGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes borderGlow {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        .label {
+            margin-top: 20px;
             text-align: center;
-            color: #d4d4d4;
-            font-size: 13px;
-            font-weight: 500;
-            letter-spacing: 0.3px;
-            white-space: nowrap;
+            color: #e0e0e0;
+            font-size: 18px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
         }
 
         .sublabel {
-            font-size: 10px;
+            font-size: 12px;
             color: #888;
             font-weight: 400;
-            margin-top: 4px;
+            margin-top: 5px;
+            text-transform: none;
+            letter-spacing: 0.5px;
         }
 
-        /* Position components */
-        .c1 { top: 100px; left: 150px; }
-        .c2 { top: 100px; right: 150px; }
-        .c3 { top: 320px; left: 50px; }
-        .c4 { top: 320px; right: 50px; }
-        .c5 { top: 540px; left: 490px; }
-        .c6 { bottom: 320px; left: 490px; }
-        .c7 { bottom: 100px; left: 250px; }
-        .c8 { bottom: 100px; right: 250px; }
+        /* Positioning */
+        .press-machine { left: 80px; top: 200px; }
+        .proximity-sensor { left: 560px; top: 200px; }
+        .microcontroller { left: 1040px; top: 200px; }
 
-        /* Dashed connection lines */
-        .connect-line {
-            stroke: #6b9bd1;
+        /* Press Stamping Machine Animation */
+        .press-svg {
+            width: 200px;
+            height: 200px;
+        }
+
+        .press-base {
+            fill: #3a5a7c;
+            stroke: #64b4ff;
             stroke-width: 2;
-            stroke-dasharray: 8, 6;
+        }
+
+        .press-ram {
+            fill: #4a6a8c;
+            stroke: #64b4ff;
+            stroke-width: 2;
+            animation: pressStamp 1.5s ease-in-out infinite;
+        }
+
+        .press-piston {
+            fill: #5a7a9c;
+            stroke: #64b4ff;
+            stroke-width: 2;
+            animation: pistonMove 1.5s ease-in-out infinite;
+        }
+
+        .workpiece {
+            fill: #ff9800;
+            stroke: #ffb74d;
+            stroke-width: 1;
+        }
+
+        .stamped-effect {
             fill: none;
-            opacity: 0.35;
+            stroke: #ff9800;
+            stroke-width: 2;
+            opacity: 0;
+            animation: stampFlash 1.5s ease-in-out infinite;
         }
 
-        /* Animated flow particles */
-        @keyframes flowMotion {
-            0% { opacity: 0; }
-            10% { opacity: 1; }
-            90% { opacity: 1; }
-            100% { opacity: 0; }
+        @keyframes pressStamp {
+            0%, 100% { transform: translateY(0); }
+            40%, 60% { transform: translateY(40px); }
         }
 
-        .flow-particle {
-            fill: #6b9bd1;
-            filter: drop-shadow(0 0 8px #6b9bd1);
-            animation: flowMotion 3s ease-in-out infinite;
+        @keyframes pistonMove {
+            0%, 100% { transform: scaleY(1); }
+            40%, 60% { transform: scaleY(0.6); }
         }
 
-        /* Gradient flow lines */
-        .flow-line {
+        @keyframes stampFlash {
+            0%, 35%, 65%, 100% { opacity: 0; }
+            45%, 55% { opacity: 1; }
+        }
+
+        /* Proximity Sensor */
+        .sensor-svg {
+            width: 200px;
+            height: 200px;
+        }
+
+        .sensor-body {
+            fill: #2d4a6a;
+            stroke: #64b4ff;
+            stroke-width: 2;
+        }
+
+        .sensor-face {
+            fill: #1a3a5a;
+            stroke: #64b4ff;
+            stroke-width: 2;
+        }
+
+        .detection-wave {
+            fill: none;
+            stroke: #00ff88;
+            stroke-width: 2;
+            opacity: 0;
+            animation: detectPulse 1.5s ease-out infinite;
+        }
+
+        .detection-wave:nth-child(2) { animation-delay: 0.2s; }
+        .detection-wave:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes detectPulse {
+            0% { opacity: 0; transform: scale(0.8); }
+            40%, 50% { opacity: 1; transform: scale(1); }
+            60% { opacity: 1; transform: scale(1.1); }
+            100% { opacity: 0; transform: scale(1.3); }
+        }
+
+        .sensor-led {
+            fill: #00ff88;
+            animation: ledBlink 1.5s ease-in-out infinite;
+        }
+
+        @keyframes ledBlink {
+            0%, 35%, 65%, 100% { fill: #00ff88; filter: drop-shadow(0 0 8px #00ff88); }
+            45%, 55% { fill: #ff4444; filter: drop-shadow(0 0 12px #ff4444); }
+        }
+
+        /* Count Display */
+        .count-display {
+            position: absolute;
+            top: -60px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 20, 40, 0.9);
+            border: 2px solid #00ff88;
+            border-radius: 10px;
+            padding: 8px 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 28px;
+            font-weight: bold;
+            color: #00ff88;
+            text-shadow: 0 0 10px #00ff88;
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+        }
+
+        .count-value {
+            animation: countUp 1.5s steps(1) infinite;
+        }
+
+        @keyframes countUp {
+            0%, 40% { content: "0247"; }
+            50%, 100% { content: "0248"; }
+        }
+
+        /* Microcontroller */
+        .mcu-svg {
+            width: 200px;
+            height: 200px;
+        }
+
+        .mcu-body {
+            fill: #1a3a5a;
+            stroke: #64b4ff;
+            stroke-width: 2;
+        }
+
+        .mcu-chip {
+            fill: #0d2840;
+            stroke: #64b4ff;
+            stroke-width: 1.5;
+        }
+
+        .mcu-pin {
+            fill: #8ab4d8;
+            stroke: none;
+        }
+
+        .mcu-led {
+            animation: mcuProcess 0.3s ease-in-out infinite;
+        }
+
+        .mcu-led.green { fill: #00ff88; }
+        .mcu-led.yellow { fill: #ffcc00; animation-delay: 0.1s; }
+        .mcu-led.red { fill: #ff4444; animation-delay: 0.2s; }
+
+        @keyframes mcuProcess {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; filter: drop-shadow(0 0 5px currentColor); }
+        }
+
+        .data-line {
+            fill: none;
+            stroke: #64b4ff;
+            stroke-width: 1;
+            stroke-dasharray: 3, 3;
+            animation: dataFlow 0.5s linear infinite;
+        }
+
+        @keyframes dataFlow {
+            from { stroke-dashoffset: 0; }
+            to { stroke-dashoffset: -6; }
+        }
+
+        /* Connection Flow Lines */
+        .flow-path {
+            fill: none;
             stroke: url(#flowGradient);
-            stroke-width: 3;
-            fill: none;
+            stroke-width: 4;
+            stroke-linecap: round;
             opacity: 0.6;
         }
 
-        @keyframes dashFlow {
-            0% { stroke-dashoffset: 1000; }
-            100% { stroke-dashoffset: 0; }
+        .flow-glow {
+            fill: none;
+            stroke: #64b4ff;
+            stroke-width: 8;
+            stroke-linecap: round;
+            opacity: 0.2;
+            filter: blur(4px);
         }
 
-        .animated-flow {
-            stroke-dasharray: 20 10;
-            animation: dashFlow 4s linear infinite;
+        /* Data Particles */
+        .data-particle {
+            fill: #00ff88;
+            filter: drop-shadow(0 0 6px #00ff88);
+        }
+
+        .data-particle-blue {
+            fill: #64b4ff;
+            filter: drop-shadow(0 0 6px #64b4ff);
+        }
+
+        /* Signal Indicator */
+        .signal-icon {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+        }
+
+        .signal-wave {
+            fill: none;
+            stroke: #00ff88;
+            stroke-width: 2;
+            opacity: 0.8;
+        }
+
+        /* Binary Data Animation */
+        .binary-text {
+            font-family: 'Courier New', monospace;
+            font-size: 10px;
+            fill: #64b4ff;
+            opacity: 0.7;
+        }
+
+        /* Title */
+        .title {
+            position: absolute;
+            top: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #e0e0e0;
+            font-size: 28px;
+            font-weight: 300;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            text-shadow: 0 0 20px rgba(100, 180, 255, 0.5);
+        }
+
+        .title span {
+            color: #64b4ff;
+            font-weight: 600;
+        }
+
+        /* Flow Description */
+        .flow-desc {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 40px;
+            align-items: center;
+        }
+
+        .flow-step {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #888;
+            font-size: 13px;
+        }
+
+        .flow-step-num {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: rgba(100, 180, 255, 0.2);
+            border: 1px solid #64b4ff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #64b4ff;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .flow-arrow {
+            color: #64b4ff;
+            font-size: 20px;
+        }
+
+        /* Stroke Counter Animation */
+        .stroke-counter {
+            position: absolute;
+            top: 50px;
+            right: 100px;
+            background: rgba(0, 20, 40, 0.9);
+            border: 2px solid #64b4ff;
+            border-radius: 15px;
+            padding: 20px 30px;
+            text-align: center;
+        }
+
+        .counter-label {
+            color: #888;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+
+        .counter-value {
+            font-family: 'Courier New', monospace;
+            font-size: 42px;
+            font-weight: bold;
+            color: #00ff88;
+            text-shadow: 0 0 15px rgba(0, 255, 136, 0.5);
+        }
+
+        .counter-unit {
+            color: #64b4ff;
+            font-size: 14px;
+            margin-top: 5px;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- Connection Lines -->
-        <svg width="1200" height="1200">
+        <!-- Title -->
+        <div class="title">Press Stamping <span>Stroke Counter</span> System</div>
+
+        <!-- Live Counter Display -->
+        <div class="stroke-counter">
+            <div class="counter-label">Total Strokes</div>
+            <div class="counter-value" id="strokeCount">0000</div>
+            <div class="counter-unit">strokes / cycle</div>
+        </div>
+
+        <!-- Main SVG for connections -->
+        <svg class="main-svg" viewBox="0 0 1400 800">
             <defs>
-                <linearGradient id="flowGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" style="stop-color:#6b9bd1;stop-opacity:0.3" />
-                    <stop offset="50%" style="stop-color:#8bb4e8;stop-opacity:0.7" />
-                    <stop offset="100%" style="stop-color:#6b9bd1;stop-opacity:0.3" />
+                <!-- Flow Gradient -->
+                <linearGradient id="flowGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" style="stop-color:#64b4ff;stop-opacity:0.3" />
+                    <stop offset="50%" style="stop-color:#00ff88;stop-opacity:0.8" />
+                    <stop offset="100%" style="stop-color:#64b4ff;stop-opacity:0.3" />
                 </linearGradient>
+
+                <!-- Glow filter -->
+                <filter id="glow">
+                    <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+                    <feMerge>
+                        <feMergeNode in="coloredBlur"/>
+                        <feMergeNode in="SourceGraphic"/>
+                    </feMerge>
+                </filter>
             </defs>
 
-            <!-- Sensor to Digital/Analog -->
-            <path class="flow-line animated-flow" d="M 260 210 L 260 430" />
-            <circle class="flow-particle" cx="260" cy="210" r="6">
-                <animate attributeName="cy" values="210;430" dur="3s" repeatCount="indefinite" />
+            <!-- Connection: Press Machine to Proximity Sensor -->
+            <path class="flow-glow" d="M 360 340 L 450 340 L 450 340 L 560 340" />
+            <path class="flow-path" d="M 360 340 L 450 340 L 450 340 L 560 340" />
+
+            <!-- Signal pulses from press to sensor -->
+            <circle class="data-particle" r="8">
+                <animate attributeName="cx" values="360;560" dur="1.5s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.2 1" />
+                <animate attributeName="cy" values="340;340" dur="1.5s" repeatCount="indefinite" />
+                <animate attributeName="opacity" values="0;1;1;0" dur="1.5s" repeatCount="indefinite" keyTimes="0;0.1;0.9;1" />
             </circle>
-            <circle class="flow-particle" cx="260" cy="210" r="4" style="animation-delay: 1.5s">
-                <animate attributeName="cy" values="210;430" dur="3s" repeatCount="indefinite" begin="1.5s" />
+            <circle class="data-particle" r="5">
+                <animate attributeName="cx" values="360;560" dur="1.5s" repeatCount="indefinite" begin="0.3s" calcMode="spline" keySplines="0.4 0 0.2 1" />
+                <animate attributeName="cy" values="340;340" dur="1.5s" repeatCount="indefinite" begin="0.3s" />
+                <animate attributeName="opacity" values="0;1;1;0" dur="1.5s" repeatCount="indefinite" begin="0.3s" keyTimes="0;0.1;0.9;1" />
             </circle>
 
-            <!-- Machine to Protocol -->
-            <path class="flow-line animated-flow" d="M 940 210 L 940 430" style="animation-delay: 0.5s" />
-            <circle class="flow-particle" cx="940" cy="210" r="6" style="animation-delay: 0.5s">
-                <animate attributeName="cy" values="210;430" dur="3s" repeatCount="indefinite" begin="0.5s" />
-            </circle>
-            <circle class="flow-particle" cx="940" cy="210" r="4" style="animation-delay: 2s">
-                <animate attributeName="cy" values="210;430" dur="3s" repeatCount="indefinite" begin="2s" />
-            </circle>
+            <!-- Connection: Proximity Sensor to Microcontroller -->
+            <path class="flow-glow" d="M 840 340 L 930 340 L 930 340 L 1040 340" />
+            <path class="flow-path" d="M 840 340 L 930 340 L 930 340 L 1040 340" />
 
-            <!-- Digital/Analog to PLC -->
-            <path class="flow-line animated-flow" d="M 250 430 Q 350 550 600 650" style="animation-delay: 1s" />
-            <circle class="flow-particle" cx="250" cy="430" r="6" style="animation-delay: 1s">
-                <animateMotion dur="2.5s" repeatCount="indefinite" begin="1s" path="M 0 0 Q 100 120 350 220" />
-            </circle>
+            <!-- Data packets from sensor to MCU -->
+            <g>
+                <rect class="data-particle-blue" x="-12" y="-6" width="24" height="12" rx="3">
+                    <animate attributeName="x" values="828;1028" dur="2s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.2 1" />
+                    <animate attributeName="opacity" values="0;1;1;0" dur="2s" repeatCount="indefinite" keyTimes="0;0.1;0.9;1" />
+                </rect>
+                <animateTransform attributeName="transform" type="translate" values="840,334;1040,334" dur="2s" repeatCount="indefinite" />
+            </g>
 
-            <!-- Protocol to PLC -->
-            <path class="flow-line animated-flow" d="M 950 430 Q 800 550 600 650" style="animation-delay: 1.5s" />
-            <circle class="flow-particle" cx="950" cy="430" r="6" style="animation-delay: 1.5s">
-                <animateMotion dur="2.5s" repeatCount="indefinite" begin="1.5s" path="M 0 0 Q -150 120 -350 220" />
-            </circle>
+            <!-- Binary data visualization -->
+            <text class="binary-text" x="890" y="320">
+                <animate attributeName="opacity" values="0;1;0" dur="0.5s" repeatCount="indefinite" />
+                10110101
+            </text>
+            <text class="binary-text" x="920" y="360">
+                <animate attributeName="opacity" values="0;1;0" dur="0.5s" repeatCount="indefinite" begin="0.25s" />
+                01001110
+            </text>
 
-            <!-- PLC to Edge Device -->
-            <path class="flow-line animated-flow" d="M 600 760 L 600 880" style="animation-delay: 2s" />
-            <circle class="flow-particle" cx="600" cy="760" r="6" style="animation-delay: 2s">
-                <animate attributeName="cy" values="760;880" dur="2s" repeatCount="indefinite" begin="2s" />
-            </circle>
-            <circle class="flow-particle" cx="600" cy="760" r="4" style="animation-delay: 3s">
-                <animate attributeName="cy" values="760;880" dur="2s" repeatCount="indefinite" begin="3s" />
-            </circle>
+            <!-- Count data packets -->
+            <g filter="url(#glow)">
+                <circle class="data-particle-blue" r="6">
+                    <animate attributeName="cx" values="840;1040" dur="1.5s" repeatCount="indefinite" begin="0.5s" />
+                    <animate attributeName="cy" values="340;340" dur="1.5s" repeatCount="indefinite" begin="0.5s" />
+                    <animate attributeName="opacity" values="0;1;1;0" dur="1.5s" repeatCount="indefinite" begin="0.5s" keyTimes="0;0.1;0.9;1" />
+                </circle>
+            </g>
 
-            <!-- Edge Device to Database -->
-            <path class="flow-line animated-flow" d="M 550 980 Q 450 1020 360 1050" style="animation-delay: 2.5s" />
-            <circle class="flow-particle" cx="550" cy="980" r="6" style="animation-delay: 2.5s">
-                <animateMotion dur="2s" repeatCount="indefinite" begin="2.5s" path="M 0 0 Q -100 40 -190 70" />
-            </circle>
-
-            <!-- Edge Device to Cloud -->
-            <path class="flow-line animated-flow" d="M 650 980 Q 750 1020 840 1050" style="animation-delay: 3s" />
-            <circle class="flow-particle" cx="650" cy="980" r="6" style="animation-delay: 3s">
-                <animateMotion dur="2s" repeatCount="indefinite" begin="3s" path="M 0 0 Q 100 40 190 70" />
-            </circle>
-
-            <!-- Database to Cloud bidirectional -->
-            <path class="flow-line animated-flow" d="M 360 1100 L 840 1100" style="animation-delay: 3.5s" />
-            <circle class="flow-particle" cx="360" cy="1100" r="6" style="animation-delay: 3.5s">
-                <animate attributeName="cx" values="360;840" dur="3s" repeatCount="indefinite" begin="3.5s" />
-            </circle>
-            <circle class="flow-particle" cx="840" cy="1105" r="5" style="animation-delay: 4s">
-                <animate attributeName="cx" values="840;360" dur="3s" repeatCount="indefinite" begin="4s" />
-            </circle>
+            <!-- Arrow indicators -->
+            <polygon fill="#64b4ff" points="555,340 545,335 545,345" opacity="0.8">
+                <animate attributeName="opacity" values="0.4;1;0.4" dur="1s" repeatCount="indefinite" />
+            </polygon>
+            <polygon fill="#64b4ff" points="1035,340 1025,335 1025,345" opacity="0.8">
+                <animate attributeName="opacity" values="0.4;1;0.4" dur="1s" repeatCount="indefinite" begin="0.5s" />
+            </polygon>
         </svg>
 
-        <!-- Component 1: Sensor -->
-        <div class="iso-component c1">
-            <svg class="iso-svg" viewBox="0 0 220 220">
-                <!-- Main box -->
-                <path class="iso-line" d="M 55 45 L 145 45 L 145 135 L 55 135 Z" />
-                <path class="iso-line" d="M 75 65 L 165 65 L 165 155 L 75 155 Z" />
-                <line class="iso-line" x1="55" y1="45" x2="75" y2="65" />
-                <line class="iso-line" x1="145" y1="45" x2="165" y2="65" />
-                <line class="iso-line" x1="145" y1="135" x2="165" y2="155" />
-                <line class="iso-line" x1="55" y1="135" x2="75" y2="155" />
-                <!-- Inner diagonal supports -->
-                <line class="detail-line" x1="65" y1="55" x2="75" y2="65" />
-                <line class="detail-line" x1="135" y1="55" x2="155" y2="65" />
-            </svg>
-            <div class="circle-zone">
-                <svg class="geo-svg animate-rotate" viewBox="0 0 90 90">
-                    <!-- Radio wave pattern -->
-                    <circle class="geo-line" cx="45" cy="45" r="12" />
-                    <circle class="geo-line animate-pulse" cx="45" cy="45" r="20" style="animation-delay: 0.2s" />
-                    <circle class="geo-line animate-pulse" cx="45" cy="45" r="28" style="animation-delay: 0.4s" />
-                    <line class="geo-line" x1="45" y1="25" x2="45" y2="15" />
-                    <line class="geo-line" x1="45" y1="65" x2="45" y2="75" />
+        <!-- Press Stamping Machine -->
+        <div class="component press-machine">
+            <div class="component-box">
+                <svg class="press-svg" viewBox="0 0 200 200">
+                    <!-- Machine Frame -->
+                    <rect class="press-base" x="30" y="20" width="140" height="25" rx="5" />
+                    <rect class="press-base" x="40" y="160" width="120" height="25" rx="3" />
+
+                    <!-- Side columns -->
+                    <rect class="press-base" x="35" y="45" width="20" height="115" />
+                    <rect class="press-base" x="145" y="45" width="20" height="115" />
+
+                    <!-- Piston/Cylinder -->
+                    <g style="transform-origin: 100px 45px;">
+                        <rect class="press-piston" x="70" y="45" width="60" height="40" rx="3" />
+                    </g>
+
+                    <!-- Ram/Punch -->
+                    <g class="press-ram" style="transform-origin: 100px 85px;">
+                        <rect x="75" y="85" width="50" height="35" rx="2" />
+                        <rect x="85" y="120" width="30" height="15" />
+                    </g>
+
+                    <!-- Die/Workpiece area -->
+                    <rect class="workpiece" x="80" y="145" width="40" height="12" rx="2" />
+
+                    <!-- Stamp effect -->
+                    <circle class="stamped-effect" cx="100" cy="150" r="25" />
+                    <circle class="stamped-effect" cx="100" cy="150" r="35" style="animation-delay: 0.1s" />
+
+                    <!-- Indicator lights -->
+                    <circle fill="#00ff88" cx="55" y="30" r="4">
+                        <animate attributeName="opacity" values="0.3;1;0.3" dur="1s" repeatCount="indefinite" />
+                    </circle>
+                    <circle fill="#ffcc00" cx="70" y="30" r="4">
+                        <animate attributeName="opacity" values="0.3;1;0.3" dur="1.5s" repeatCount="indefinite" begin="0.2s" />
+                    </circle>
                 </svg>
             </div>
-            <div class="label">Sensor<div class="sublabel">data collection</div></div>
+            <div class="label">Press Stamping<div class="sublabel">Mechanical Press Machine</div></div>
         </div>
 
-        <!-- Component 2: Machine -->
-        <div class="iso-component c2">
-            <svg class="iso-svg" viewBox="0 0 220 220">
-                <path class="iso-line" d="M 55 45 L 145 45 L 145 135 L 55 135 Z" />
-                <path class="iso-line" d="M 75 65 L 165 65 L 165 155 L 75 155 Z" />
-                <line class="iso-line" x1="55" y1="45" x2="75" y2="65" />
-                <line class="iso-line" x1="145" y1="45" x2="165" y2="65" />
-                <line class="iso-line" x1="145" y1="135" x2="165" y2="155" />
-                <line class="iso-line" x1="55" y1="135" x2="75" y2="155" />
-                <line class="detail-line" x1="135" y1="135" x2="155" y2="145" />
-            </svg>
-            <div class="circle-zone">
-                <svg class="geo-svg animate-rotate" viewBox="0 0 90 90" style="animation-duration: 15s">
-                    <!-- Gear shape -->
-                    <circle class="geo-line" cx="45" cy="45" r="20" />
-                    <circle class="geo-fill animate-pulse" cx="45" cy="45" r="12" />
-                    <line class="geo-line" x1="45" y1="20" x2="45" y2="12" />
-                    <line class="geo-line" x1="45" y1="70" x2="45" y2="78" />
-                    <line class="geo-line" x1="65" y1="45" x2="73" y2="45" />
-                    <line class="geo-line" x1="25" y1="45" x2="17" y2="45" />
-                    <line class="geo-line" x1="58" y1="32" x2="64" y2="26" />
-                    <line class="geo-line" x1="32" y1="58" x2="26" y2="64" />
+        <!-- Proximity Sensor -->
+        <div class="component proximity-sensor">
+            <div class="component-box">
+                <div class="count-display">
+                    COUNT: <span id="sensorCount">0248</span>
+                </div>
+                <svg class="sensor-svg" viewBox="0 0 200 200">
+                    <!-- Sensor Housing -->
+                    <rect class="sensor-body" x="50" y="60" width="100" height="80" rx="10" />
+
+                    <!-- Sensor Face (Detection end) -->
+                    <rect class="sensor-face" x="30" y="75" width="25" height="50" rx="5" />
+
+                    <!-- Detection waves -->
+                    <g style="transform-origin: 30px 100px;">
+                        <path class="detection-wave" d="M 25 80 Q 5 100 25 120" />
+                        <path class="detection-wave" d="M 20 70 Q -10 100 20 130" />
+                        <path class="detection-wave" d="M 15 60 Q -20 100 15 140" />
+                    </g>
+
+                    <!-- Cable -->
+                    <rect class="sensor-body" x="145" y="85" width="30" height="30" rx="5" />
+                    <path fill="none" stroke="#64b4ff" stroke-width="4" d="M 175 100 Q 190 100 190 115 L 190 160" />
+
+                    <!-- Status LED -->
+                    <circle class="sensor-led" cx="100" cy="85" r="8" />
+
+                    <!-- Sensor label -->
+                    <text x="100" y="125" text-anchor="middle" fill="#64b4ff" font-size="10" font-family="monospace">PROX</text>
+
+                    <!-- Detection indicator -->
+                    <g>
+                        <circle fill="#00ff88" cx="75" cy="100" r="3">
+                            <animate attributeName="r" values="2;4;2" dur="1.5s" repeatCount="indefinite" />
+                            <animate attributeName="opacity" values="0.5;1;0.5" dur="1.5s" repeatCount="indefinite" />
+                        </circle>
+                        <circle fill="#00ff88" cx="125" cy="100" r="3">
+                            <animate attributeName="r" values="2;4;2" dur="1.5s" repeatCount="indefinite" begin="0.75s" />
+                            <animate attributeName="opacity" values="0.5;1;0.5" dur="1.5s" repeatCount="indefinite" begin="0.75s" />
+                        </circle>
+                    </g>
                 </svg>
             </div>
-            <div class="label">Machine / Meters<div class="sublabel">equipment</div></div>
+            <div class="label">Proximity Sensor<div class="sublabel">Inductive / Capacitive Counting</div></div>
         </div>
 
-        <!-- Component 3: Digital/Analog -->
-        <div class="iso-component c3">
-            <svg class="iso-svg" viewBox="0 0 220 220">
-                <path class="iso-line" d="M 55 45 L 145 45 L 145 135 L 55 135 Z" />
-                <path class="iso-line" d="M 75 65 L 165 65 L 165 155 L 75 155 Z" />
-                <line class="iso-line" x1="55" y1="45" x2="75" y2="65" />
-                <line class="iso-line" x1="145" y1="45" x2="165" y2="65" />
-                <line class="iso-line" x1="145" y1="135" x2="165" y2="155" />
-                <line class="iso-line" x1="55" y1="135" x2="75" y2="155" />
-            </svg>
-            <div class="circle-zone">
-                <svg class="geo-svg" viewBox="0 0 90 90">
-                    <!-- Waveform pattern -->
-                    <path class="geo-line animate-dash" d="M 10 45 L 20 30 L 30 45 L 40 20 L 50 50 L 60 35 L 70 45 L 80 30" />
-                    <rect class="geo-fill animate-pulse" x="15" y="55" width="8" height="20" />
-                    <rect class="geo-fill animate-pulse" x="35" y="50" width="8" height="25" style="animation-delay: 0.2s" />
-                    <rect class="geo-fill animate-pulse" x="55" y="58" width="8" height="17" style="animation-delay: 0.4s" />
+        <!-- Microcontroller -->
+        <div class="component microcontroller">
+            <div class="component-box">
+                <svg class="mcu-svg" viewBox="0 0 200 200">
+                    <!-- PCB Board -->
+                    <rect class="mcu-body" x="30" y="40" width="140" height="120" rx="8" />
+
+                    <!-- Main Chip -->
+                    <rect class="mcu-chip" x="60" y="65" width="80" height="60" rx="4" />
+
+                    <!-- Chip pins - top -->
+                    <rect class="mcu-pin" x="70" y="55" width="8" height="12" />
+                    <rect class="mcu-pin" x="85" y="55" width="8" height="12" />
+                    <rect class="mcu-pin" x="100" y="55" width="8" height="12" />
+                    <rect class="mcu-pin" x="115" y="55" width="8" height="12" />
+
+                    <!-- Chip pins - bottom -->
+                    <rect class="mcu-pin" x="70" y="123" width="8" height="12" />
+                    <rect class="mcu-pin" x="85" y="123" width="8" height="12" />
+                    <rect class="mcu-pin" x="100" y="123" width="8" height="12" />
+                    <rect class="mcu-pin" x="115" y="123" width="8" height="12" />
+
+                    <!-- Chip pins - left -->
+                    <rect class="mcu-pin" x="50" y="75" width="12" height="6" />
+                    <rect class="mcu-pin" x="50" y="90" width="12" height="6" />
+                    <rect class="mcu-pin" x="50" y="105" width="12" height="6" />
+
+                    <!-- Chip pins - right -->
+                    <rect class="mcu-pin" x="138" y="75" width="12" height="6" />
+                    <rect class="mcu-pin" x="138" y="90" width="12" height="6" />
+                    <rect class="mcu-pin" x="138" y="105" width="12" height="6" />
+
+                    <!-- Status LEDs -->
+                    <circle class="mcu-led green" cx="45" cy="50" r="5" />
+                    <circle class="mcu-led yellow" cx="60" cy="50" r="5" />
+                    <circle class="mcu-led red" cx="75" cy="50" r="5" />
+
+                    <!-- Crystal oscillator -->
+                    <rect fill="#4a6a8c" stroke="#64b4ff" stroke-width="1" x="140" y="70" width="20" height="10" rx="2" />
+
+                    <!-- Chip marking -->
+                    <text x="100" y="100" text-anchor="middle" fill="#64b4ff" font-size="9" font-family="monospace">MCU</text>
+                    <text x="100" y="112" text-anchor="middle" fill="#4a8ab4" font-size="7" font-family="monospace">32-BIT</text>
+
+                    <!-- Pin indicator dot -->
+                    <circle fill="#64b4ff" cx="68" cy="73" r="3" />
+
+                    <!-- Data lines animation -->
+                    <line class="data-line" x1="50" y1="78" x2="30" y2="78" />
+                    <line class="data-line" x1="50" y1="93" x2="30" y2="93" />
+                    <line class="data-line" x1="50" y1="108" x2="30" y2="108" />
+
+                    <!-- Processing indicator -->
+                    <g>
+                        <rect fill="none" stroke="#00ff88" stroke-width="1" x="70" y="75" width="60" height="35" rx="2" opacity="0.5">
+                            <animate attributeName="opacity" values="0.2;0.8;0.2" dur="1s" repeatCount="indefinite" />
+                        </rect>
+                    </g>
                 </svg>
             </div>
-            <div class="label">Digital / Analog<div class="sublabel">signal processing</div></div>
+            <div class="label">Microcontroller<div class="sublabel">Data Processing & Storage</div></div>
         </div>
 
-        <!-- Component 4: Protocol -->
-        <div class="iso-component c4">
-            <svg class="iso-svg" viewBox="0 0 220 220">
-                <path class="iso-line" d="M 55 45 L 145 45 L 145 135 L 55 135 Z" />
-                <path class="iso-line" d="M 75 65 L 165 65 L 165 155 L 75 155 Z" />
-                <line class="iso-line" x1="55" y1="45" x2="75" y2="65" />
-                <line class="iso-line" x1="145" y1="45" x2="165" y2="65" />
-                <line class="iso-line" x1="145" y1="135" x2="165" y2="155" />
-                <line class="iso-line" x1="55" y1="135" x2="75" y2="155" />
-            </svg>
-            <div class="circle-zone">
-                <svg class="geo-svg" viewBox="0 0 90 90">
-                    <!-- Network nodes -->
-                    <circle class="geo-fill animate-pulse" cx="45" cy="25" r="6" />
-                    <circle class="geo-fill animate-pulse" cx="25" cy="50" r="6" style="animation-delay: 0.3s" />
-                    <circle class="geo-fill animate-pulse" cx="65" cy="50" r="6" style="animation-delay: 0.6s" />
-                    <circle class="geo-fill animate-pulse" cx="45" cy="65" r="6" style="animation-delay: 0.9s" />
-                    <line class="geo-line" x1="45" y1="25" x2="25" y2="50" />
-                    <line class="geo-line" x1="45" y1="25" x2="65" y2="50" />
-                    <line class="geo-line" x1="25" y1="50" x2="45" y2="65" />
-                    <line class="geo-line" x1="65" y1="50" x2="45" y2="65" />
-                </svg>
+        <!-- Flow Description -->
+        <div class="flow-desc">
+            <div class="flow-step">
+                <div class="flow-step-num">1</div>
+                <span>Press stamps workpiece</span>
             </div>
-            <div class="label">25+ Protocol<div class="sublabel">communication</div></div>
-        </div>
-
-        <!-- Component 5: PLC -->
-        <div class="iso-component c5">
-            <svg class="iso-svg" viewBox="0 0 220 220">
-                <path class="iso-line" d="M 55 45 L 145 45 L 145 135 L 55 135 Z" />
-                <path class="iso-line" d="M 75 65 L 165 65 L 165 155 L 75 155 Z" />
-                <line class="iso-line" x1="55" y1="45" x2="75" y2="65" />
-                <line class="iso-line" x1="145" y1="45" x2="165" y2="65" />
-                <line class="iso-line" x1="145" y1="135" x2="165" y2="155" />
-                <line class="iso-line" x1="55" y1="135" x2="75" y2="155" />
-            </svg>
-            <div class="circle-zone">
-                <svg class="geo-svg animate-rotate" viewBox="0 0 90 90" style="animation-duration: 25s">
-                    <!-- Circuit board pattern -->
-                    <rect class="geo-fill" x="30" y="30" width="30" height="30" />
-                    <circle class="geo-line animate-pulse" cx="35" cy="35" r="3" />
-                    <circle class="geo-line animate-pulse" cx="55" cy="35" r="3" style="animation-delay: 0.2s" />
-                    <circle class="geo-line animate-pulse" cx="35" cy="55" r="3" style="animation-delay: 0.4s" />
-                    <circle class="geo-line animate-pulse" cx="55" cy="55" r="3" style="animation-delay: 0.6s" />
-                    <line class="geo-line" x1="35" y1="35" x2="55" y2="35" />
-                    <line class="geo-line" x1="35" y1="55" x2="55" y2="55" />
-                </svg>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step">
+                <div class="flow-step-num">2</div>
+                <span>Sensor detects stroke</span>
             </div>
-            <div class="label">PLC / Controller<div class="sublabel">control logic</div></div>
-        </div>
-
-        <!-- Component 6: Edge Device -->
-        <div class="iso-component c6">
-            <svg class="iso-svg" viewBox="0 0 220 220">
-                <path class="iso-line" d="M 55 45 L 145 45 L 145 135 L 55 135 Z" />
-                <path class="iso-line" d="M 75 65 L 165 65 L 165 155 L 75 155 Z" />
-                <line class="iso-line" x1="55" y1="45" x2="75" y2="65" />
-                <line class="iso-line" x1="145" y1="45" x2="165" y2="65" />
-                <line class="iso-line" x1="145" y1="135" x2="165" y2="155" />
-                <line class="iso-line" x1="55" y1="135" x2="75" y2="155" />
-            </svg>
-            <div class="circle-zone">
-                <svg class="geo-svg animate-rotate" viewBox="0 0 90 90" style="animation-duration: 18s">
-                    <!-- Globe/network -->
-                    <circle class="geo-line" cx="45" cy="45" r="25" />
-                    <ellipse class="geo-line" cx="45" cy="45" rx="25" ry="12" />
-                    <ellipse class="geo-line" cx="45" cy="45" rx="12" ry="25" />
-                    <line class="geo-line" x1="20" y1="45" x2="70" y2="45" />
-                </svg>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step">
+                <div class="flow-step-num">3</div>
+                <span>Count sent to MCU</span>
             </div>
-            <div class="label">Edge Device<div class="sublabel">local processing</div></div>
-        </div>
-
-        <!-- Component 7: Database -->
-        <div class="iso-component c7">
-            <svg class="iso-svg" viewBox="0 0 220 220">
-                <path class="iso-line" d="M 55 45 L 145 45 L 145 135 L 55 135 Z" />
-                <path class="iso-line" d="M 75 65 L 165 65 L 165 155 L 75 155 Z" />
-                <line class="iso-line" x1="55" y1="45" x2="75" y2="65" />
-                <line class="iso-line" x1="145" y1="45" x2="165" y2="65" />
-                <line class="iso-line" x1="145" y1="135" x2="165" y2="155" />
-                <line class="iso-line" x1="55" y1="135" x2="75" y2="155" />
-            </svg>
-            <div class="circle-zone">
-                <svg class="geo-svg" viewBox="0 0 90 90">
-                    <!-- Database cylinder stack -->
-                    <ellipse class="geo-fill animate-pulse" cx="45" cy="30" rx="20" ry="8" />
-                    <ellipse class="geo-fill animate-pulse" cx="45" cy="45" rx="20" ry="8" style="animation-delay: 0.3s" />
-                    <ellipse class="geo-fill animate-pulse" cx="45" cy="60" rx="20" ry="8" style="animation-delay: 0.6s" />
-                    <line class="geo-line" x1="25" y1="30" x2="25" y2="60" />
-                    <line class="geo-line" x1="65" y1="30" x2="65" y2="60" />
-                </svg>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step">
+                <div class="flow-step-num">4</div>
+                <span>Data processed & stored</span>
             </div>
-            <div class="label">Database<div class="sublabel">MQTT / HTTP / API</div></div>
-        </div>
-
-        <!-- Component 8: Cloud -->
-        <div class="iso-component c8">
-            <svg class="iso-svg" viewBox="0 0 220 220">
-                <path class="iso-line" d="M 55 45 L 145 45 L 145 135 L 55 135 Z" />
-                <path class="iso-line" d="M 75 65 L 165 65 L 165 155 L 75 155 Z" />
-                <line class="iso-line" x1="55" y1="45" x2="75" y2="65" />
-                <line class="iso-line" x1="145" y1="45" x2="165" y2="65" />
-                <line class="iso-line" x1="145" y1="135" x2="165" y2="155" />
-                <line class="iso-line" x1="55" y1="135" x2="75" y2="155" />
-            </svg>
-            <div class="circle-zone">
-                <svg class="geo-svg" viewBox="0 0 90 90">
-                    <!-- Cloud shape with lines -->
-                    <path class="geo-fill animate-pulse" d="M 25 50 Q 25 40 35 40 Q 35 30 45 30 Q 55 30 55 40 Q 65 40 65 50 Q 65 60 55 60 L 35 60 Q 25 60 25 50" />
-                    <line class="geo-line" x1="30" y1="48" x2="60" y2="48" />
-                    <line class="geo-line" x1="32" y1="52" x2="58" y2="52" />
-                    <line class="geo-line animate-dash" x1="45" y1="60" x2="45" y2="70" />
-                </svg>
-            </div>
-            <div class="label">Local Server / Cloud<div class="sublabel">data storage</div></div>
         </div>
     </div>
+
+    <script>
+        // Animate stroke counter
+        let strokeCount = 247;
+        const counterElement = document.getElementById('strokeCount');
+        const sensorCountElement = document.getElementById('sensorCount');
+
+        function updateCounter() {
+            strokeCount++;
+            if (strokeCount > 9999) strokeCount = 0;
+
+            const formattedCount = strokeCount.toString().padStart(4, '0');
+            counterElement.textContent = formattedCount;
+            sensorCountElement.textContent = formattedCount;
+        }
+
+        // Update counter every 1.5 seconds (synced with press animation)
+        setInterval(updateCounter, 1500);
+    </script>
 </body>
 </html>
