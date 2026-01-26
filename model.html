@@ -780,263 +780,577 @@
     function createPLCCabinet() {
       const group = new THREE.Group();
 
-      // Teal base accent
-      const baseAccent = new THREE.Mesh(new THREE.BoxGeometry(2, 0.15, 1.4), tealAccent);
-      baseAccent.position.y = 0.075;
-      baseAccent.castShadow = true;
-      group.add(baseAccent);
+      // Main PLC body (light gray industrial look)
+      const plcBody = new THREE.Mesh(
+        new THREE.BoxGeometry(2.4, 2.8, 1.6),
+        new THREE.MeshStandardMaterial({
+          color: 0xcdd5dc,
+          metalness: 0.2,
+          roughness: 0.6
+        })
+      );
+      plcBody.position.y = 1.4;
+      plcBody.castShadow = true;
+      group.add(plcBody);
 
-      // Main cabinet body
-      const cabinet = new THREE.Mesh(new THREE.BoxGeometry(1.8, 4, 1.2), metalGray);
-      cabinet.position.y = 2;
-      cabinet.castShadow = true;
-      group.add(cabinet);
+      // Top section with terminal blocks
+      const topSection = new THREE.Mesh(
+        new THREE.BoxGeometry(2.4, 0.8, 1.6),
+        new THREE.MeshStandardMaterial({
+          color: 0x3d4f5f,
+          metalness: 0.3,
+          roughness: 0.5
+        })
+      );
+      topSection.position.y = 3.2;
+      topSection.castShadow = true;
+      group.add(topSection);
 
-      // Teal trim on top
-      const topTrim = new THREE.Mesh(new THREE.BoxGeometry(1.9, 0.1, 1.3), tealAccent);
-      topTrim.position.y = 4.05;
-      group.add(topTrim);
+      // Terminal block rows (green connectors)
+      for (let row = 0; row < 2; row++) {
+        for (let i = 0; i < 8; i++) {
+          const terminal = new THREE.Mesh(
+            new THREE.BoxGeometry(0.2, 0.25, 0.15),
+            new THREE.MeshStandardMaterial({
+              color: 0x2d5a3d,
+              metalness: 0.3,
+              roughness: 0.6
+            })
+          );
+          terminal.position.set(-0.8 + i * 0.23, 3.0 + row * 0.35, 0.75);
+          group.add(terminal);
 
-      // Cabinet door frame
-      const doorFrame = new THREE.Mesh(new THREE.BoxGeometry(1.5, 3.5, 0.05), metalLight);
-      doorFrame.position.set(0, 2, 0.63);
-      group.add(doorFrame);
+          // Metal contact inside terminal
+          const contact = new THREE.Mesh(
+            new THREE.BoxGeometry(0.08, 0.15, 0.02),
+            metalGray
+          );
+          contact.position.set(-0.8 + i * 0.23, 3.0 + row * 0.35, 0.83);
+          group.add(contact);
+        }
+      }
 
-      // HMI Screen
-      const screenBorder = new THREE.Mesh(new THREE.BoxGeometry(1, 0.8, 0.08), metalDark);
-      screenBorder.position.set(0, 3.2, 0.68);
-      group.add(screenBorder);
+      // Ventilation grilles (top of body)
+      for (let i = 0; i < 8; i++) {
+        const grille = new THREE.Mesh(
+          new THREE.BoxGeometry(0.2, 0.03, 1.4),
+          metalDark
+        );
+        grille.position.set(-0.85 + i * 0.25, 2.75, 0);
+        group.add(grille);
+      }
 
-      const screen = new THREE.Mesh(new THREE.BoxGeometry(0.85, 0.65, 0.02),
-        new THREE.MeshBasicMaterial({ color: 0x1a3a5c }));
-      screen.position.set(0, 3.2, 0.74);
+      // Side ventilation slots
+      for (let side of [-1, 1]) {
+        for (let i = 0; i < 6; i++) {
+          const slot = new THREE.Mesh(
+            new THREE.BoxGeometry(0.03, 0.8, 0.08),
+            metalDark
+          );
+          slot.position.set(side * 1.22, 1.8, -0.5 + i * 0.2);
+          group.add(slot);
+        }
+      }
+
+      // LCD Display screen
+      const screenFrame = new THREE.Mesh(
+        new THREE.BoxGeometry(1.2, 0.5, 0.08),
+        metalDark
+      );
+      screenFrame.position.set(-0.4, 2.0, 0.85);
+      group.add(screenFrame);
+
+      const screen = new THREE.Mesh(
+        new THREE.BoxGeometry(1.0, 0.38, 0.02),
+        new THREE.MeshBasicMaterial({ color: 0x1e3a5f })
+      );
+      screen.position.set(-0.4, 2.0, 0.9);
       group.add(screen);
 
-      // Screen content glow
-      const screenGlow = new THREE.Mesh(new THREE.BoxGeometry(0.75, 0.55, 0.01),
-        new THREE.MeshBasicMaterial({ color: 0x00e5ff, transparent: true, opacity: 0.3 }));
-      screenGlow.position.set(0, 3.2, 0.75);
-      group.add(screenGlow);
+      // Screen content (simple display)
+      const screenContent = new THREE.Mesh(
+        new THREE.BoxGeometry(0.9, 0.3, 0.01),
+        new THREE.MeshBasicMaterial({
+          color: 0x22d3ee,
+          transparent: true,
+          opacity: 0.6
+        })
+      );
+      screenContent.position.set(-0.4, 2.0, 0.92);
+      group.add(screenContent);
 
-      // Status LEDs
-      const ledColors = [0x00ff88, 0x00ff88, 0xffaa00, 0xff4444];
+      // Control buttons (right side of screen)
+      const buttonColors = [0x22c55e, 0xfbbf24, 0x64748b, 0x64748b, 0x64748b, 0x64748b];
+      for (let row = 0; row < 3; row++) {
+        for (let col = 0; col < 2; col++) {
+          const btn = new THREE.Mesh(
+            new THREE.CylinderGeometry(0.06, 0.06, 0.04, 12),
+            new THREE.MeshStandardMaterial({
+              color: buttonColors[row * 2 + col],
+              metalness: 0.4,
+              roughness: 0.5
+            })
+          );
+          btn.rotation.x = Math.PI / 2;
+          btn.position.set(0.65 + col * 0.2, 2.15 - row * 0.18, 0.85);
+          group.add(btn);
+        }
+      }
+
+      // Status LEDs below screen
+      const ledColors = [0x22c55e, 0x22c55e, 0xfbbf24, 0xef4444];
       for (let i = 0; i < 4; i++) {
-        const led = new THREE.Mesh(new THREE.SphereGeometry(0.05, 8, 8),
-          new THREE.MeshBasicMaterial({ color: ledColors[i] }));
-        led.position.set(-0.5 + i * 0.33, 2.5, 0.68);
+        const led = new THREE.Mesh(
+          new THREE.CircleGeometry(0.04, 12),
+          new THREE.MeshBasicMaterial({ color: ledColors[i] })
+        );
+        led.position.set(-0.8 + i * 0.25, 1.6, 0.82);
         group.add(led);
       }
 
-      // Ventilation slots
-      for (let i = 0; i < 5; i++) {
-        const slot = new THREE.Mesh(new THREE.BoxGeometry(0.8, 0.05, 0.02), metalDark);
-        slot.position.set(0, 0.8 + i * 0.15, 0.62);
-        group.add(slot);
+      // Bottom cable entry section
+      const cableSection = new THREE.Mesh(
+        new THREE.BoxGeometry(2.2, 0.3, 1.4),
+        metalDark
+      );
+      cableSection.position.y = 0.15;
+      group.add(cableSection);
+
+      // Mounting holes (corners)
+      for (let x of [-1, 1]) {
+        for (let z of [-0.6, 0.6]) {
+          const hole = new THREE.Mesh(
+            new THREE.CircleGeometry(0.08, 16),
+            metalDark
+          );
+          hole.rotation.x = -Math.PI / 2;
+          hole.position.set(x * 1.05, 3.61, z);
+          group.add(hole);
+        }
       }
-
-      // Cable entry (bottom)
-      const cableEntry = new THREE.Mesh(new THREE.BoxGeometry(0.8, 0.3, 0.3), metalDark);
-      cableEntry.position.set(0, 0.15, 0);
-      group.add(cableEntry);
-
-      // "PLC" label
-      const labelGeo = new THREE.BoxGeometry(0.6, 0.2, 0.01);
-      const labelMat = new THREE.MeshBasicMaterial({ color: 0x00e5ff });
-      const label = new THREE.Mesh(labelGeo, labelMat);
-      label.position.set(0, 3.7, 0.68);
-      group.add(label);
 
       return group;
     }
 
     // ============================================
-    // 4. EDGE GATEWAY
+    // 4. EDGE GATEWAY (Stacked servers with cyan glow)
     // ============================================
     function createEdgeGateway() {
       const group = new THREE.Group();
 
-      // Gateway box
-      const box = new THREE.Mesh(new THREE.BoxGeometry(1.2, 0.8, 1), metalDark);
-      box.position.y = 0.4;
-      box.castShadow = true;
-      group.add(box);
+      // Dark base platform with grid
+      const basePlatform = new THREE.Mesh(
+        new THREE.BoxGeometry(2.2, 0.12, 1.8),
+        metalDark
+      );
+      basePlatform.position.y = 0.06;
+      basePlatform.castShadow = true;
+      group.add(basePlatform);
 
-      // Front panel
-      const panel = new THREE.Mesh(new THREE.BoxGeometry(1.1, 0.7, 0.02), metalGray);
-      panel.position.set(0, 0.4, 0.52);
-      group.add(panel);
+      // Circuit grid lines on base
+      const gridMat = new THREE.MeshBasicMaterial({
+        color: 0x22d3ee,
+        transparent: true,
+        opacity: 0.7
+      });
 
-      // Status LEDs
-      for (let i = 0; i < 3; i++) {
-        const led = new THREE.Mesh(new THREE.SphereGeometry(0.04, 8, 8),
-          new THREE.MeshBasicMaterial({ color: i === 0 ? 0x00ff88 : 0x00e5ff }));
-        led.position.set(-0.3 + i * 0.3, 0.6, 0.54);
+      for (let i = 0; i < 4; i++) {
+        const hLine = new THREE.Mesh(new THREE.BoxGeometry(2, 0.02, 0.015), gridMat);
+        hLine.position.set(0, 0.13, -0.6 + i * 0.4);
+        group.add(hLine);
+      }
+
+      for (let i = 0; i < 5; i++) {
+        const vLine = new THREE.Mesh(new THREE.BoxGeometry(0.015, 0.02, 1.6), gridMat);
+        vLine.position.set(-0.8 + i * 0.4, 0.13, 0);
+        group.add(vLine);
+      }
+
+      // Stacked database/server units
+      const stackColors = [0x4a5568, 0x5a6577, 0x4a5568, 0x5a6577];
+
+      for (let i = 0; i < 4; i++) {
+        // Main server block
+        const serverBlock = new THREE.Mesh(
+          new THREE.BoxGeometry(1.6, 0.35, 1.2),
+          new THREE.MeshStandardMaterial({
+            color: stackColors[i],
+            metalness: 0.6,
+            roughness: 0.35
+          })
+        );
+        serverBlock.position.y = 0.3 + i * 0.4;
+        serverBlock.castShadow = true;
+        group.add(serverBlock);
+
+        // Cyan glow edge strip on each layer
+        const glowStrip = new THREE.Mesh(
+          new THREE.BoxGeometry(1.62, 0.06, 1.22),
+          new THREE.MeshBasicMaterial({
+            color: 0x22d3ee,
+            transparent: true,
+            opacity: 0.8
+          })
+        );
+        glowStrip.position.y = 0.14 + i * 0.4;
+        group.add(glowStrip);
+
+        // Front panel details
+        const frontPanel = new THREE.Mesh(
+          new THREE.BoxGeometry(1.5, 0.25, 0.02),
+          metalLight
+        );
+        frontPanel.position.set(0, 0.3 + i * 0.4, 0.62);
+        group.add(frontPanel);
+      }
+
+      // Top cap with rounded look
+      const topCap = new THREE.Mesh(
+        new THREE.BoxGeometry(1.7, 0.1, 1.3),
+        metalLight
+      );
+      topCap.position.y = 1.75;
+      group.add(topCap);
+
+      // Glowing LED indicators on front
+      const ledPositions = [-0.5, -0.2, 0.1, 0.4];
+      const ledColors = [0x22c55e, 0x22d3ee, 0x22d3ee, 0xfbbf24];
+
+      ledPositions.forEach((x, i) => {
+        const led = new THREE.Mesh(
+          new THREE.SphereGeometry(0.04, 12, 12),
+          new THREE.MeshBasicMaterial({ color: ledColors[i] })
+        );
+        led.position.set(x, 1.5, 0.65);
         group.add(led);
-      }
+      });
 
-      // Ethernet ports
-      for (let i = 0; i < 2; i++) {
-        const port = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.15, 0.05), metalDark);
-        port.position.set(-0.25 + i * 0.5, 0.25, 0.53);
-        group.add(port);
-      }
-
-      // Antenna
-      const antenna = new THREE.Mesh(new THREE.CylinderGeometry(0.02, 0.02, 0.6, 8), metalGray);
-      antenna.position.set(0.4, 1, 0);
+      // Small antenna
+      const antenna = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.02, 0.02, 0.5, 8),
+        metalGray
+      );
+      antenna.position.set(0.6, 2.05, 0);
       group.add(antenna);
 
-      const antennaTop = new THREE.Mesh(new THREE.SphereGeometry(0.05, 8, 8), metalDark);
-      antennaTop.position.set(0.4, 1.3, 0);
+      const antennaTop = new THREE.Mesh(
+        new THREE.SphereGeometry(0.05, 8, 8),
+        new THREE.MeshBasicMaterial({ color: 0x22d3ee })
+      );
+      antennaTop.position.set(0.6, 2.35, 0);
       group.add(antennaTop);
-
-      // Mounting bracket with teal accent
-      const bracket = new THREE.Mesh(new THREE.BoxGeometry(1.4, 0.1, 1.2), tealAccent);
-      bracket.position.y = 0;
-      group.add(bracket);
-
-      // Teal accent strip on top
-      const topStrip = new THREE.Mesh(new THREE.BoxGeometry(1.2, 0.05, 1), tealAccent);
-      topStrip.position.y = 0.82;
-      group.add(topStrip);
 
       return group;
     }
 
     // ============================================
-    // 5. CLOUD PLATFORM
+    // 5. CLOUD PLATFORM (Glowing cloud with circuit grid)
     // ============================================
     function createCloudPlatform() {
       const group = new THREE.Group();
 
-      // Teal base platform
-      const basePlatform = new THREE.Mesh(new THREE.BoxGeometry(2.5, 0.1, 2), tealAccent);
-      basePlatform.position.y = 0.05;
+      // Dark platform base with circuit grid look
+      const basePlatform = new THREE.Mesh(
+        new THREE.BoxGeometry(3, 0.2, 2.5),
+        metalDark
+      );
+      basePlatform.position.y = 0.1;
       basePlatform.castShadow = true;
       group.add(basePlatform);
 
-      // Server rack base
-      const rackBase = new THREE.Mesh(new THREE.BoxGeometry(2, 0.2, 1.5), metalDark);
-      rackBase.position.y = 0.15;
-      rackBase.castShadow = true;
-      group.add(rackBase);
-
-      // Server units (stacked)
-      for (let i = 0; i < 3; i++) {
-        const server = new THREE.Mesh(new THREE.BoxGeometry(1.8, 0.5, 1.3), metalGray);
-        server.position.set(0, 0.55 + i * 0.6, 0);
-        server.castShadow = true;
-        group.add(server);
-
-        // Server LEDs
-        for (let j = 0; j < 4; j++) {
-          const led = new THREE.Mesh(new THREE.SphereGeometry(0.03, 8, 8),
-            new THREE.MeshBasicMaterial({ color: Math.random() > 0.3 ? 0x00ff88 : 0x00e5ff }));
-          led.position.set(-0.6 + j * 0.4, 0.55 + i * 0.6, 0.66);
-          group.add(led);
-        }
-      }
-
-      // Cloud symbol (floating above)
-      const cloudMat = new THREE.MeshStandardMaterial({
-        color: 0xffffff,
+      // Glowing circuit grid lines on platform
+      const gridMat = new THREE.MeshBasicMaterial({
+        color: 0x22d3ee,
         transparent: true,
-        opacity: 0.6,
-        emissive: 0x4488ff,
-        emissiveIntensity: 0.3
+        opacity: 0.8
       });
 
+      // Horizontal grid lines
+      for (let i = 0; i < 5; i++) {
+        const line = new THREE.Mesh(
+          new THREE.BoxGeometry(2.8, 0.03, 0.02),
+          gridMat
+        );
+        line.position.set(0, 0.22, -1 + i * 0.5);
+        group.add(line);
+      }
+
+      // Vertical grid lines
+      for (let i = 0; i < 6; i++) {
+        const line = new THREE.Mesh(
+          new THREE.BoxGeometry(0.02, 0.03, 2.3),
+          gridMat
+        );
+        line.position.set(-1.2 + i * 0.48, 0.22, 0);
+        group.add(line);
+      }
+
+      // Central server stack (sleek design)
+      const serverBase = new THREE.Mesh(
+        new THREE.BoxGeometry(1.6, 0.15, 1.2),
+        metalLight
+      );
+      serverBase.position.y = 0.28;
+      serverBase.castShadow = true;
+      group.add(serverBase);
+
+      // Stacked server layers with cyan glow edges
+      for (let i = 0; i < 4; i++) {
+        const serverLayer = new THREE.Mesh(
+          new THREE.BoxGeometry(1.4, 0.2, 1),
+          new THREE.MeshStandardMaterial({
+            color: 0x4a5568,
+            metalness: 0.7,
+            roughness: 0.3
+          })
+        );
+        serverLayer.position.y = 0.45 + i * 0.25;
+        serverLayer.castShadow = true;
+        group.add(serverLayer);
+
+        // Cyan glow edge on each layer
+        const glowEdge = new THREE.Mesh(
+          new THREE.BoxGeometry(1.42, 0.04, 1.02),
+          new THREE.MeshBasicMaterial({
+            color: 0x22d3ee,
+            transparent: true,
+            opacity: 0.7
+          })
+        );
+        glowEdge.position.y = 0.35 + i * 0.25;
+        group.add(glowEdge);
+      }
+
+      // Top rounded cap
+      const topCap = new THREE.Mesh(
+        new THREE.BoxGeometry(1.5, 0.1, 1.1),
+        metalLight
+      );
+      topCap.position.y = 1.5;
+      group.add(topCap);
+
+      // Floating glowing cloud icon
+      const cloudMat = new THREE.MeshBasicMaterial({
+        color: 0x22d3ee,
+        transparent: true,
+        opacity: 0.95
+      });
+
+      // Main cloud body (larger overlapping spheres)
       const cloudParts = [
-        { pos: [0, 3.5, 0], scale: 0.5 },
-        { pos: [0.4, 3.5, 0], scale: 0.4 },
-        { pos: [-0.35, 3.5, 0], scale: 0.35 },
-        { pos: [0.15, 3.7, 0], scale: 0.35 }
+        { pos: [0, 2.8, 0], radius: 0.45 },
+        { pos: [0.5, 2.75, 0], radius: 0.35 },
+        { pos: [-0.5, 2.75, 0], radius: 0.35 },
+        { pos: [0.3, 3.0, 0], radius: 0.3 },
+        { pos: [-0.25, 2.95, 0], radius: 0.28 },
+        { pos: [0, 2.5, 0], radius: 0.3 }
       ];
 
       cloudParts.forEach(part => {
-        const sphere = new THREE.Mesh(new THREE.SphereGeometry(part.scale, 16, 16), cloudMat);
+        const sphere = new THREE.Mesh(
+          new THREE.SphereGeometry(part.radius, 24, 24),
+          cloudMat
+        );
         sphere.position.set(...part.pos);
         group.add(sphere);
       });
+
+      // Cloud glow aura
+      const cloudGlow = new THREE.Mesh(
+        new THREE.SphereGeometry(0.8, 16, 16),
+        new THREE.MeshBasicMaterial({
+          color: 0x22d3ee,
+          transparent: true,
+          opacity: 0.2
+        })
+      );
+      cloudGlow.position.set(0, 2.8, 0);
+      cloudGlow.scale.set(1.2, 0.8, 1);
+      group.add(cloudGlow);
+
+      // Vertical beam of light from server to cloud
+      const lightBeam = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.08, 0.15, 1.2, 8),
+        new THREE.MeshBasicMaterial({
+          color: 0x22d3ee,
+          transparent: true,
+          opacity: 0.4
+        })
+      );
+      lightBeam.position.y = 2;
+      group.add(lightBeam);
 
       return group;
     }
 
     // ============================================
-    // 6. DASHBOARD SCREENS
+    // 6. DASHBOARD SCREENS (Floating glass panel with glowing ring)
     // ============================================
     function createDashboardScreens() {
       const group = new THREE.Group();
 
-      // Teal platform base
-      const platformBase = new THREE.Mesh(new THREE.BoxGeometry(3.5, 0.08, 2), tealAccent);
-      platformBase.position.y = 0.04;
-      platformBase.castShadow = true;
-      group.add(platformBase);
-
-      // Main screen stand
-      const standBase = new THREE.Mesh(new THREE.BoxGeometry(0.8, 0.15, 0.8), metalDark);
-      standBase.position.y = 0.12;
-      standBase.castShadow = true;
-      group.add(standBase);
-
-      const standPole = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.1, 2, 16), metalGray);
-      standPole.position.y = 1.15;
-      group.add(standPole);
-
-      // Main dashboard screen
-      const screenFrame = new THREE.Mesh(new THREE.BoxGeometry(3, 2, 0.1), metalDark);
-      screenFrame.position.set(0, 3, 0);
-      screenFrame.castShadow = true;
-      group.add(screenFrame);
-
-      const screenGlass = new THREE.Mesh(new THREE.BoxGeometry(2.8, 1.8, 0.05), glassMat);
-      screenGlass.position.set(0, 3, 0.08);
-      group.add(screenGlass);
-
-      // Screen frame glow
-      const frameGlow = new THREE.LineSegments(
-        new THREE.EdgesGeometry(new THREE.BoxGeometry(2.85, 1.85, 0.02)),
-        new THREE.LineBasicMaterial({ color: 0x00e5ff, transparent: true, opacity: 0.7 })
+      // Bottom platform layer (dark with ridges)
+      const bottomPlatform = new THREE.Mesh(
+        new THREE.BoxGeometry(2.8, 0.25, 2.8),
+        metalDark
       );
-      frameGlow.position.set(0, 3, 0.08);
-      group.add(frameGlow);
+      bottomPlatform.position.y = 0.125;
+      bottomPlatform.castShadow = true;
+      group.add(bottomPlatform);
 
-      // Dashboard content (simplified charts)
-      // Bar chart
-      const barHeights = [0.4, 0.6, 0.5, 0.8, 0.65];
+      // Ridge details on bottom platform
+      for (let i = 0; i < 6; i++) {
+        const ridge = new THREE.Mesh(
+          new THREE.BoxGeometry(2.6, 0.08, 0.12),
+          metalGray
+        );
+        ridge.position.set(0, 0.3, -1.1 + i * 0.44);
+        group.add(ridge);
+      }
+
+      // Middle platform layer (lighter)
+      const middlePlatform = new THREE.Mesh(
+        new THREE.BoxGeometry(2.4, 0.2, 2.4),
+        metalLight
+      );
+      middlePlatform.position.y = 0.45;
+      middlePlatform.castShadow = true;
+      group.add(middlePlatform);
+
+      // Top platform (rounded corners effect)
+      const topPlatform = new THREE.Mesh(
+        new THREE.BoxGeometry(2.2, 0.15, 2.2),
+        metalGray
+      );
+      topPlatform.position.y = 0.625;
+      topPlatform.castShadow = true;
+      group.add(topPlatform);
+
+      // Glowing ring/portal on top platform
+      const ringGeo = new THREE.TorusGeometry(0.7, 0.08, 16, 48);
+      const ringMat = new THREE.MeshBasicMaterial({
+        color: 0x22d3ee,
+        transparent: true,
+        opacity: 0.9
+      });
+      const glowRing = new THREE.Mesh(ringGeo, ringMat);
+      glowRing.rotation.x = -Math.PI / 2;
+      glowRing.position.y = 0.75;
+      group.add(glowRing);
+
+      // Inner glow disc
+      const innerDisc = new THREE.Mesh(
+        new THREE.CircleGeometry(0.65, 32),
+        new THREE.MeshBasicMaterial({
+          color: 0x67e8f9,
+          transparent: true,
+          opacity: 0.4
+        })
+      );
+      innerDisc.rotation.x = -Math.PI / 2;
+      innerDisc.position.y = 0.72;
+      group.add(innerDisc);
+
+      // Floating orb above ring
+      const orbGeo = new THREE.SphereGeometry(0.25, 32, 32);
+      const orbMat = new THREE.MeshStandardMaterial({
+        color: 0x67e8f9,
+        metalness: 0.8,
+        roughness: 0.2,
+        transparent: true,
+        opacity: 0.9
+      });
+      const floatingOrb = new THREE.Mesh(orbGeo, orbMat);
+      floatingOrb.position.y = 1.3;
+      group.add(floatingOrb);
+
+      // Orb glow
+      const orbGlow = new THREE.Mesh(
+        new THREE.SphereGeometry(0.35, 16, 16),
+        new THREE.MeshBasicMaterial({
+          color: 0x22d3ee,
+          transparent: true,
+          opacity: 0.3
+        })
+      );
+      orbGlow.position.y = 1.3;
+      group.add(orbGlow);
+
+      // Floating glass panel (tilted)
+      const glassPanelGeo = new THREE.BoxGeometry(2, 2, 0.08);
+      const glassPanelMat = new THREE.MeshStandardMaterial({
+        color: 0xb4f0e0,
+        transparent: true,
+        opacity: 0.5,
+        metalness: 0.2,
+        roughness: 0.1
+      });
+      const glassPanel = new THREE.Mesh(glassPanelGeo, glassPanelMat);
+      glassPanel.position.set(0, 2.8, 0.5);
+      glassPanel.rotation.x = -0.15;
+      glassPanel.rotation.y = -0.1;
+      group.add(glassPanel);
+
+      // Glass panel border glow
+      const panelBorder = new THREE.LineSegments(
+        new THREE.EdgesGeometry(new THREE.BoxGeometry(2.05, 2.05, 0.02)),
+        new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.8 })
+      );
+      panelBorder.position.copy(glassPanel.position);
+      panelBorder.rotation.copy(glassPanel.rotation);
+      group.add(panelBorder);
+
+      // Charts on glass panel
+      // Pie chart (colorful)
+      const pieGroup = new THREE.Group();
+
+      // Yellow segment
+      const yellowSeg = new THREE.Mesh(
+        new THREE.CircleGeometry(0.35, 32, 0, Math.PI * 0.6),
+        new THREE.MeshBasicMaterial({ color: 0xfde047 })
+      );
+      pieGroup.add(yellowSeg);
+
+      // Cyan segment
+      const cyanSeg = new THREE.Mesh(
+        new THREE.CircleGeometry(0.35, 32, Math.PI * 0.6, Math.PI * 0.5),
+        new THREE.MeshBasicMaterial({ color: 0x22d3ee })
+      );
+      pieGroup.add(cyanSeg);
+
+      // Pink/purple segment
+      const pinkSeg = new THREE.Mesh(
+        new THREE.CircleGeometry(0.35, 32, Math.PI * 1.1, Math.PI * 0.9),
+        new THREE.MeshBasicMaterial({ color: 0xd946ef })
+      );
+      pieGroup.add(pinkSeg);
+
+      pieGroup.position.set(-0.5, 3.2, 0.6);
+      pieGroup.rotation.x = -0.15;
+      pieGroup.rotation.y = -0.1;
+      group.add(pieGroup);
+
+      // Bar chart (colorful)
+      const barColors = [0xfde047, 0x22d3ee, 0xfb923c, 0xd946ef];
+      const barHeights = [0.5, 0.7, 0.4, 0.6];
       barHeights.forEach((h, i) => {
         const bar = new THREE.Mesh(
-          new THREE.BoxGeometry(0.15, h, 0.02),
-          new THREE.MeshBasicMaterial({ color: 0x00e5ff })
+          new THREE.BoxGeometry(0.15, h, 0.04),
+          new THREE.MeshBasicMaterial({ color: barColors[i] })
         );
-        bar.position.set(-0.8 + i * 0.25, 2.4 + h / 2, 0.1);
+        bar.position.set(0.3 + i * 0.22, 2.4 + h / 2, 0.6);
+        bar.rotation.x = -0.15;
         group.add(bar);
       });
 
-      // Pie chart (simplified)
-      const pieGeo = new THREE.CircleGeometry(0.35, 32);
-      const pie = new THREE.Mesh(pieGeo, new THREE.MeshBasicMaterial({ color: 0x00e5ff }));
-      pie.position.set(0.8, 3.3, 0.1);
-      group.add(pie);
-
-      const pieSegment = new THREE.Mesh(
-        new THREE.CircleGeometry(0.35, 32, 0, Math.PI * 0.7),
-        new THREE.MeshBasicMaterial({ color: 0xffa726 })
+      // Small ring indicator
+      const smallRing = new THREE.Mesh(
+        new THREE.TorusGeometry(0.15, 0.03, 8, 24),
+        new THREE.MeshBasicMaterial({ color: 0x22d3ee })
       );
-      pieSegment.position.set(0.8, 3.3, 0.11);
-      group.add(pieSegment);
-
-      // Secondary screen (angled)
-      const screen2Frame = new THREE.Mesh(new THREE.BoxGeometry(2, 1.5, 0.08), metalDark);
-      screen2Frame.position.set(2.2, 2.8, 0.8);
-      screen2Frame.rotation.y = -0.4;
-      group.add(screen2Frame);
-
-      const screen2Glass = new THREE.Mesh(new THREE.BoxGeometry(1.85, 1.35, 0.03), glassMat);
-      screen2Glass.position.set(2.2, 2.8, 0.85);
-      screen2Glass.rotation.y = -0.4;
-      group.add(screen2Glass);
+      smallRing.position.set(0.6, 3.4, 0.6);
+      smallRing.rotation.x = -0.15;
+      group.add(smallRing);
 
       return group;
     }
