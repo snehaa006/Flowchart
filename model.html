@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>IIoT Monitor - Hub Architecture</title>
+  <title>IIoT Press Machine Monitor - 3D Data Flow</title>
   <style>
     * {
       margin: 0;
@@ -147,8 +147,8 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      width: 420px;
-      max-height: 90vh;
+      width: 450px;
+      max-height: 85vh;
       background: rgba(255, 255, 255, 0.95);
       backdrop-filter: blur(20px);
       border-radius: 20px;
@@ -217,17 +217,17 @@
     }
     .panel-content {
       padding: 20px 24px;
-      max-height: 60vh;
+      max-height: 55vh;
       overflow-y: auto;
     }
     .data-item {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 14px 16px;
+      padding: 12px 14px;
       background: rgba(100, 100, 200, 0.08);
-      border-radius: 12px;
-      margin-bottom: 10px;
+      border-radius: 10px;
+      margin-bottom: 8px;
       border-left: 4px solid #4488ff;
     }
     body.dark-theme .data-item {
@@ -241,7 +241,7 @@
       color: #aaa;
     }
     .data-value {
-      font-size: 18px;
+      font-size: 16px;
       font-weight: 700;
       color: #333;
       font-family: 'SF Mono', Monaco, monospace;
@@ -250,7 +250,7 @@
       color: #fff;
     }
     .data-unit {
-      font-size: 12px;
+      font-size: 11px;
       color: #888;
       margin-left: 4px;
     }
@@ -280,7 +280,7 @@
       50% { opacity: 0.5; }
     }
     .panel-footer {
-      padding: 16px 24px;
+      padding: 14px 24px;
       border-top: 1px solid rgba(0, 0, 0, 0.1);
       display: flex;
       justify-content: space-between;
@@ -305,90 +305,99 @@
       50% { opacity: 1; transform: translateX(3px); }
     }
 
-    /* Dashboard Visualization Section */
-    .dashboard-section {
-      margin-top: 15px;
-      padding: 15px;
-      background: linear-gradient(135deg, rgba(100, 150, 255, 0.1), rgba(150, 100, 255, 0.05));
-      border-radius: 12px;
-    }
-    .dashboard-section h4 {
-      font-size: 14px;
-      color: #555;
-      margin-bottom: 12px;
-    }
-    body.dark-theme .dashboard-section h4 {
-      color: #bbb;
-    }
-    .chart-container {
+    /* Dashboard Visualizations */
+    .dashboard-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 12px;
+      margin-top: 15px;
     }
-    .mini-chart {
-      background: rgba(255, 255, 255, 0.8);
-      border-radius: 10px;
-      padding: 12px;
+    .chart-card {
+      background: linear-gradient(135deg, rgba(100, 150, 255, 0.1), rgba(150, 100, 255, 0.05));
+      border-radius: 12px;
+      padding: 14px;
       text-align: center;
     }
-    body.dark-theme .mini-chart {
-      background: rgba(50, 50, 70, 0.8);
+    body.dark-theme .chart-card {
+      background: linear-gradient(135deg, rgba(100, 150, 255, 0.15), rgba(150, 100, 255, 0.1));
     }
-    .chart-title {
+    .chart-card h5 {
       font-size: 11px;
       color: #888;
-      margin-bottom: 8px;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
     .bar-chart {
       display: flex;
       align-items: flex-end;
       justify-content: center;
       gap: 4px;
-      height: 50px;
+      height: 60px;
     }
     .bar {
-      width: 12px;
-      border-radius: 3px 3px 0 0;
-      animation: barGrow 1s ease-out;
+      width: 14px;
+      border-radius: 4px 4px 0 0;
+      animation: barGrow 0.8s ease-out forwards;
     }
     @keyframes barGrow {
-      from { height: 0; }
+      from { transform: scaleY(0); }
+      to { transform: scaleY(1); }
     }
     .pie-chart {
-      width: 50px;
-      height: 50px;
+      width: 60px;
+      height: 60px;
       border-radius: 50%;
       margin: 0 auto;
-      background: conic-gradient(#00e5ff 0deg 120deg, #ff6b9d 120deg 220deg, #ffeb3b 220deg 360deg);
+      background: conic-gradient(
+        #00e5ff 0deg 108deg,
+        #ff6b9d 108deg 198deg,
+        #00e5aa 198deg 288deg,
+        #ffeb3b 288deg 360deg
+      );
+      position: relative;
+    }
+    .pie-chart::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 25px;
+      height: 25px;
+      background: white;
+      border-radius: 50%;
+    }
+    body.dark-theme .pie-chart::after {
+      background: #2a2a40;
     }
     .line-chart {
-      height: 50px;
+      height: 60px;
       display: flex;
       align-items: flex-end;
       justify-content: space-between;
+      padding: 0 5px;
     }
-    .line-point {
-      width: 6px;
-      height: 6px;
-      background: #4488ff;
-      border-radius: 50%;
+    .line-bar {
+      width: 8px;
+      background: linear-gradient(to top, #00e5ff, #4488ff);
+      border-radius: 4px;
+      animation: lineGrow 0.6s ease-out forwards;
+    }
+    @keyframes lineGrow {
+      from { height: 0; }
+    }
+    .gauge-container {
       position: relative;
-    }
-    .line-point::after {
-      content: '';
-      position: absolute;
-      width: 20px;
-      height: 2px;
-      background: linear-gradient(to right, #4488ff, transparent);
-      left: 6px;
-      top: 2px;
-    }
-    .gauge-chart {
-      width: 60px;
-      height: 30px;
-      border-radius: 60px 60px 0 0;
-      background: linear-gradient(to right, #00e5aa 0%, #ffeb3b 50%, #ff6b6b 100%);
+      width: 70px;
+      height: 40px;
       margin: 0 auto;
+    }
+    .gauge-bg {
+      width: 70px;
+      height: 35px;
+      border-radius: 70px 70px 0 0;
+      background: linear-gradient(90deg, #00e5aa 0%, #ffeb3b 50%, #ff6b6b 100%);
       position: relative;
       overflow: hidden;
     }
@@ -397,50 +406,74 @@
       bottom: 0;
       left: 50%;
       width: 3px;
-      height: 25px;
+      height: 30px;
       background: #333;
       transform-origin: bottom center;
-      transform: translateX(-50%) rotate(-30deg);
-      animation: gaugeMove 2s ease-in-out infinite;
+      transform: translateX(-50%) rotate(var(--rotation, -45deg));
+      border-radius: 2px;
+      transition: transform 1s ease-out;
     }
-    @keyframes gaugeMove {
-      0%, 100% { transform: translateX(-50%) rotate(-30deg); }
-      50% { transform: translateX(-50%) rotate(30deg); }
+    body.dark-theme .gauge-needle {
+      background: #fff;
+    }
+    .gauge-center {
+      position: absolute;
+      bottom: -5px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 12px;
+      height: 12px;
+      background: #333;
+      border-radius: 50%;
+    }
+    body.dark-theme .gauge-center {
+      background: #fff;
+    }
+    .gauge-value {
+      text-align: center;
+      font-size: 14px;
+      font-weight: bold;
+      color: #333;
+      margin-top: 5px;
+    }
+    body.dark-theme .gauge-value {
+      color: #fff;
     }
 
-    /* Cloud visualization */
-    .viz-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-top: 15px;
+    /* Real-time chart */
+    .realtime-chart {
+      height: 60px;
+      background: rgba(0, 229, 255, 0.1);
+      border-radius: 8px;
+      overflow: hidden;
+      position: relative;
     }
-    .viz-card {
-      background: linear-gradient(135deg, rgba(100, 150, 255, 0.1), rgba(150, 100, 255, 0.1));
-      border-radius: 12px;
-      padding: 16px;
-      text-align: center;
-      cursor: pointer;
-      transition: transform 0.2s, box-shadow 0.2s;
+    .realtime-line {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 100%;
+      background: linear-gradient(to top, rgba(0, 229, 255, 0.3), transparent);
+      clip-path: polygon(0% 70%, 10% 50%, 20% 60%, 30% 40%, 40% 55%, 50% 35%, 60% 45%, 70% 30%, 80% 40%, 90% 25%, 100% 35%, 100% 100%, 0% 100%);
     }
-    .viz-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(100, 150, 255, 0.3);
+    .realtime-dots {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-around;
+      padding: 5px;
     }
-    body.dark-theme .viz-card {
-      background: linear-gradient(135deg, rgba(100, 150, 255, 0.2), rgba(150, 100, 255, 0.2));
-    }
-    .viz-card .icon {
-      font-size: 28px;
-      margin-bottom: 8px;
-    }
-    .viz-card .name {
-      font-size: 12px;
-      color: #666;
-      font-weight: 500;
-    }
-    body.dark-theme .viz-card .name {
-      color: #bbb;
+    .realtime-dot {
+      width: 6px;
+      height: 6px;
+      background: #00e5ff;
+      border-radius: 50%;
+      box-shadow: 0 0 6px #00e5ff;
     }
 
     /* Overlay */
@@ -450,47 +483,13 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0, 0, 0, 0.4);
+      background: rgba(0, 0, 0, 0.5);
       z-index: 150;
       animation: fadeIn 0.2s;
     }
     @keyframes fadeIn {
       from { opacity: 0; }
       to { opacity: 1; }
-    }
-
-    /* Legend */
-    .legend {
-      position: absolute;
-      bottom: 80px;
-      right: 20px;
-      background: rgba(40, 40, 60, 0.9);
-      border-radius: 12px;
-      padding: 15px;
-      color: white;
-      font-size: 12px;
-      z-index: 100;
-      backdrop-filter: blur(10px);
-    }
-    .legend-item {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 8px;
-    }
-    .legend-item:last-child {
-      margin-bottom: 0;
-    }
-    .legend-line {
-      width: 24px;
-      height: 3px;
-      border-radius: 2px;
-    }
-    .legend-line.data-in {
-      background: linear-gradient(90deg, #00e5aa, #00e5ff);
-    }
-    .legend-line.data-out {
-      background: linear-gradient(90deg, #ffa726, #ff6b6b);
     }
   </style>
 </head>
@@ -514,18 +513,6 @@
   <!-- Close Button -->
   <button class="close-btn" onclick="window.close()" title="Close">×</button>
 
-  <!-- Legend -->
-  <div class="legend">
-    <div class="legend-item">
-      <div class="legend-line data-in"></div>
-      <span>Data In</span>
-    </div>
-    <div class="legend-item">
-      <div class="legend-line data-out"></div>
-      <span>Data Out</span>
-    </div>
-  </div>
-
   <!-- Info Panel (hidden by default) -->
   <div id="overlay" class="overlay" style="display: none;" onclick="hidePanel()"></div>
   <div id="infoPanel" class="info-panel" style="display: none;"></div>
@@ -545,20 +532,20 @@
     function updateSceneBackground() {
       if (isDarkTheme) {
         scene.background = new THREE.Color(0x1a1a2e);
-        floor.material.color.setHex(0x2a2a3e);
+        floor.material.color.setHex(0x252535);
       } else {
-        scene.background = new THREE.Color(0xc8c8c8);
-        floor.material.color.setHex(0xb0b0b0);
+        scene.background = new THREE.Color(0x808080);
+        floor.material.color.setHex(0x707070);
       }
     }
 
     // Setup
     const container = document.getElementById('container');
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0xc8c8c8);
+    scene.background = new THREE.Color(0x808080);
 
     const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-    camera.position.set(25, 20, 25);
+    camera.position.set(18, 14, 18);
     camera.lookAt(0, 0, 0);
 
     const renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -569,31 +556,32 @@
     container.appendChild(renderer.domElement);
 
     // Lighting
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
     scene.add(ambientLight);
 
-    const mainLight = new THREE.DirectionalLight(0xffffff, 0.8);
-    mainLight.position.set(15, 25, 15);
+    const mainLight = new THREE.DirectionalLight(0xffffff, 0.9);
+    mainLight.position.set(10, 20, 10);
     mainLight.castShadow = true;
     mainLight.shadow.mapSize.width = 2048;
     mainLight.shadow.mapSize.height = 2048;
     mainLight.shadow.camera.near = 0.5;
-    mainLight.shadow.camera.far = 100;
-    mainLight.shadow.camera.left = -30;
-    mainLight.shadow.camera.right = 30;
-    mainLight.shadow.camera.top = 30;
-    mainLight.shadow.camera.bottom = -30;
+    mainLight.shadow.camera.far = 60;
+    mainLight.shadow.camera.left = -25;
+    mainLight.shadow.camera.right = 25;
+    mainLight.shadow.camera.top = 25;
+    mainLight.shadow.camera.bottom = -25;
     scene.add(mainLight);
 
     const fillLight = new THREE.DirectionalLight(0x8888ff, 0.3);
-    fillLight.position.set(-10, 10, -10);
+    fillLight.position.set(-10, 8, -10);
     scene.add(fillLight);
 
     // Floor
-    const floorGeometry = new THREE.PlaneGeometry(60, 60);
+    const floorGeometry = new THREE.PlaneGeometry(50, 50);
     const floorMaterial = new THREE.MeshStandardMaterial({
-      color: 0xb0b0b0,
-      roughness: 0.8
+      color: 0x707070,
+      roughness: 0.9,
+      metalness: 0.1
     });
     const floor = new THREE.Mesh(floorGeometry, floorMaterial);
     floor.rotation.x = -Math.PI / 2;
@@ -602,567 +590,600 @@
 
     // Objects map for raycasting
     const objectsMap = {};
-    const dataFlowLines = [];
+    const particles = [];
 
     // Materials
-    const cyanGlow = new THREE.MeshStandardMaterial({ color: 0x00e5ff, emissive: 0x00e5ff, emissiveIntensity: 0.5 });
-    const orangeGlow = new THREE.MeshStandardMaterial({ color: 0xffa726, emissive: 0xffa726, emissiveIntensity: 0.5 });
+    const whiteMetal = new THREE.MeshStandardMaterial({ color: 0xf0f0f0, metalness: 0.3, roughness: 0.4 });
+    const darkMetal = new THREE.MeshStandardMaterial({ color: 0x2a2a35, metalness: 0.7, roughness: 0.2 });
+    const grayMetal = new THREE.MeshStandardMaterial({ color: 0x555555, metalness: 0.5, roughness: 0.3 });
+    const yellowAccent = new THREE.MeshStandardMaterial({ color: 0xf5a623, metalness: 0.4, roughness: 0.3 });
+    const cyanGlow = new THREE.MeshStandardMaterial({ color: 0x00e5ff, emissive: 0x00e5ff, emissiveIntensity: 0.6 });
+    const orangeGlow = new THREE.MeshStandardMaterial({ color: 0xffa726, emissive: 0xffa726, emissiveIntensity: 0.6 });
+    const mintGreen = new THREE.MeshStandardMaterial({ color: 0xa8e6cf, metalness: 0.2, roughness: 0.5 });
+    const glassMaterial = new THREE.MeshStandardMaterial({
+      color: 0xaaddff,
+      transparent: true,
+      opacity: 0.25,
+      metalness: 0.1,
+      roughness: 0.1
+    });
 
     // ============================================
-    // HEXAGON NODE COMPONENT (Like flowchart)
+    // CENTRAL PRESS MACHINE (Main Processing Unit)
     // ============================================
-    function createHexNode(config) {
+    function createPressMachine() {
       const group = new THREE.Group();
-      const { color, iconColor, size = 1.5 } = config;
 
-      // Hexagonal base with wireframe effect
-      const hexShape = new THREE.Shape();
-      const sides = 6;
-      const radius = size;
-      for (let i = 0; i < sides; i++) {
-        const angle = (i / sides) * Math.PI * 2 - Math.PI / 2;
-        const x = Math.cos(angle) * radius;
-        const y = Math.sin(angle) * radius;
-        if (i === 0) hexShape.moveTo(x, y);
-        else hexShape.lineTo(x, y);
+      // Bottom base layer (large gray platform)
+      const base1 = new THREE.Mesh(new THREE.BoxGeometry(4, 0.4, 3.5), grayMetal);
+      base1.position.y = 0.2;
+      base1.castShadow = true;
+      base1.receiveShadow = true;
+      group.add(base1);
+
+      // Second layer (dark)
+      const base2 = new THREE.Mesh(new THREE.BoxGeometry(3.5, 0.5, 3), darkMetal);
+      base2.position.y = 0.65;
+      base2.castShadow = true;
+      group.add(base2);
+
+      // Third layer (yellow accent stripe)
+      const yellowStripe = new THREE.Mesh(new THREE.BoxGeometry(3.6, 0.15, 3.1), yellowAccent);
+      yellowStripe.position.y = 1.0;
+      group.add(yellowStripe);
+
+      // Main machine body
+      const mainBody = new THREE.Mesh(new THREE.BoxGeometry(3, 1.2, 2.5), darkMetal);
+      mainBody.position.y = 1.7;
+      mainBody.castShadow = true;
+      group.add(mainBody);
+
+      // Top platform
+      const topPlatform = new THREE.Mesh(new THREE.BoxGeometry(2.8, 0.2, 2.3), grayMetal);
+      topPlatform.position.y = 2.4;
+      group.add(topPlatform);
+
+      // Frame pillars
+      const pillarGeo = new THREE.BoxGeometry(0.15, 2.5, 0.15);
+      const pillarPositions = [[-1.2, 3.75, -0.9], [1.2, 3.75, -0.9], [-1.2, 3.75, 0.9], [1.2, 3.75, 0.9]];
+      pillarPositions.forEach(pos => {
+        const pillar = new THREE.Mesh(pillarGeo, whiteMetal);
+        pillar.position.set(...pos);
+        pillar.castShadow = true;
+        group.add(pillar);
+      });
+
+      // Top frame bar
+      const topBar = new THREE.Mesh(new THREE.BoxGeometry(2.6, 0.2, 0.15), whiteMetal);
+      topBar.position.set(0, 5.1, -0.9);
+      group.add(topBar);
+
+      const topBar2 = new THREE.Mesh(new THREE.BoxGeometry(2.6, 0.2, 0.15), whiteMetal);
+      topBar2.position.set(0, 5.1, 0.9);
+      group.add(topBar2);
+
+      const crossBar = new THREE.Mesh(new THREE.BoxGeometry(0.15, 0.2, 2), whiteMetal);
+      crossBar.position.set(0, 5.1, 0);
+      group.add(crossBar);
+
+      // Press head (moving part)
+      const pressHead = new THREE.Mesh(new THREE.BoxGeometry(1.8, 0.3, 1.5), grayMetal);
+      pressHead.position.set(0, 4.5, 0);
+      group.add(pressHead);
+
+      // Glowing blue core (central indicator)
+      const coreBase = new THREE.Mesh(new THREE.CylinderGeometry(0.4, 0.5, 0.25, 32),
+        new THREE.MeshStandardMaterial({ color: 0x4488ff, emissive: 0x4488ff, emissiveIntensity: 0.8 }));
+      coreBase.position.set(0, 2.55, 0);
+      group.add(coreBase);
+
+      // Glowing sphere on top
+      const coreSphere = new THREE.Mesh(new THREE.SphereGeometry(0.35, 32, 32),
+        new THREE.MeshStandardMaterial({ color: 0x88aacc, metalness: 0.9, roughness: 0.1 }));
+      coreSphere.position.set(0, 2.9, 0);
+      group.add(coreSphere);
+
+      // Blue glow ring around sphere
+      const glowRing = new THREE.Mesh(new THREE.TorusGeometry(0.45, 0.05, 16, 32),
+        new THREE.MeshBasicMaterial({ color: 0x00e5ff, transparent: true, opacity: 0.8 }));
+      glowRing.rotation.x = Math.PI / 2;
+      glowRing.position.set(0, 2.7, 0);
+      group.add(glowRing);
+
+      // Side vents/grills
+      for (let i = 0; i < 3; i++) {
+        const vent = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.4, 0.5), darkMetal);
+        vent.position.set(1.55, 1.7 + i * 0.15, 0);
+        group.add(vent);
       }
-      hexShape.closePath();
-
-      // Create hexagonal prism
-      const extrudeSettings = { depth: 0.8, bevelEnabled: true, bevelThickness: 0.05, bevelSize: 0.05 };
-      const hexGeo = new THREE.ExtrudeGeometry(hexShape, extrudeSettings);
-      const hexMat = new THREE.MeshStandardMaterial({
-        color: color,
-        transparent: true,
-        opacity: 0.3,
-        metalness: 0.2,
-        roughness: 0.3
-      });
-      const hexMesh = new THREE.Mesh(hexGeo, hexMat);
-      hexMesh.rotation.x = -Math.PI / 2;
-      hexMesh.position.y = 0.4;
-      hexMesh.castShadow = true;
-      group.add(hexMesh);
-
-      // Wireframe edges (cyan glow)
-      const edgesGeo = new THREE.EdgesGeometry(hexGeo);
-      const edgesMat = new THREE.LineBasicMaterial({ color: iconColor, linewidth: 2, transparent: true, opacity: 0.9 });
-      const edges = new THREE.LineSegments(edgesGeo, edgesMat);
-      edges.rotation.x = -Math.PI / 2;
-      edges.position.y = 0.4;
-      group.add(edges);
-
-      // Icon platform in center
-      const platformGeo = new THREE.CylinderGeometry(size * 0.4, size * 0.5, 0.3, 6);
-      const platformMat = new THREE.MeshStandardMaterial({
-        color: 0x222233,
-        metalness: 0.7,
-        roughness: 0.3
-      });
-      const platform = new THREE.Mesh(platformGeo, platformMat);
-      platform.position.y = 0.95;
-      platform.castShadow = true;
-      group.add(platform);
-
-      // Glowing indicator ring
-      const ringGeo = new THREE.TorusGeometry(size * 0.35, 0.05, 8, 6);
-      const ringMat = new THREE.MeshBasicMaterial({ color: iconColor, transparent: true, opacity: 0.8 });
-      const ring = new THREE.Mesh(ringGeo, ringMat);
-      ring.rotation.x = -Math.PI / 2;
-      ring.position.y = 1.15;
-      group.add(ring);
 
       return group;
     }
 
     // ============================================
-    // SPECIFIC NODE ICONS
+    // LEFT ANALYTICS MODULE (Floating glass panel with charts)
     // ============================================
-    function addPressStampingIcon(group) {
-      // Press/stamping machine icon
-      const baseGeo = new THREE.BoxGeometry(0.6, 0.3, 0.4);
-      const baseMat = new THREE.MeshStandardMaterial({ color: 0x00e5ff, emissive: 0x00e5ff, emissiveIntensity: 0.3 });
-      const base = new THREE.Mesh(baseGeo, baseMat);
-      base.position.y = 1.4;
+    function createAnalyticsModule() {
+      const group = new THREE.Group();
+
+      // Base platform
+      const basePlatform = new THREE.Mesh(new THREE.BoxGeometry(2, 0.3, 1.5), darkMetal);
+      basePlatform.position.y = 0.15;
+      basePlatform.castShadow = true;
+      group.add(basePlatform);
+
+      // Raised section
+      const raised = new THREE.Mesh(new THREE.BoxGeometry(1.6, 0.4, 1.2), grayMetal);
+      raised.position.y = 0.5;
+      raised.castShadow = true;
+      group.add(raised);
+
+      // Support pole
+      const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.08, 1.5, 16), grayMetal);
+      pole.position.set(0, 1.45, 0);
+      group.add(pole);
+
+      // Floating glass panel (tilted)
+      const glassPanel = new THREE.Mesh(new THREE.BoxGeometry(2.2, 1.6, 0.08), glassMaterial);
+      glassPanel.position.set(0, 2.8, 0.3);
+      glassPanel.rotation.x = -0.2;
+      group.add(glassPanel);
+
+      // Glass panel frame
+      const frameGeo = new THREE.EdgesGeometry(new THREE.BoxGeometry(2.2, 1.6, 0.08));
+      const frame = new THREE.LineSegments(frameGeo, new THREE.LineBasicMaterial({ color: 0x00e5ff, transparent: true, opacity: 0.8 }));
+      frame.position.copy(glassPanel.position);
+      frame.rotation.copy(glassPanel.rotation);
+      group.add(frame);
+
+      // Pie chart visualization (colored segments)
+      const pieColors = [0x00e5ff, 0xff6b9d, 0x00e5aa, 0xffeb3b];
+      const pieAngles = [0, Math.PI * 0.6, Math.PI * 1.1, Math.PI * 1.6, Math.PI * 2];
+      for (let i = 0; i < 4; i++) {
+        const segmentGeo = new THREE.CircleGeometry(0.35, 32, pieAngles[i], pieAngles[i + 1] - pieAngles[i]);
+        const segment = new THREE.Mesh(segmentGeo, new THREE.MeshBasicMaterial({ color: pieColors[i] }));
+        segment.position.set(-0.5, 3.1, 0.38);
+        segment.rotation.x = -0.2;
+        group.add(segment);
+      }
+
+      // Bar chart
+      const barColors = [0x00e5ff, 0xff6b9d, 0x00e5aa];
+      const barHeights = [0.4, 0.6, 0.35];
+      for (let i = 0; i < 3; i++) {
+        const bar = new THREE.Mesh(
+          new THREE.BoxGeometry(0.18, barHeights[i], 0.05),
+          new THREE.MeshBasicMaterial({ color: barColors[i] })
+        );
+        bar.position.set(0.4 + i * 0.25, 2.4 + barHeights[i] / 2, 0.38);
+        bar.rotation.x = -0.2;
+        group.add(bar);
+      }
+
+      return group;
+    }
+
+    // ============================================
+    // UPPER-LEFT CONTROLLER (Server with shield icon)
+    // ============================================
+    function createControllerModule() {
+      const group = new THREE.Group();
+
+      // Base
+      const base = new THREE.Mesh(new THREE.BoxGeometry(1.8, 0.25, 1.4), darkMetal);
+      base.position.y = 0.125;
+      base.castShadow = true;
       group.add(base);
 
-      // Press arm
-      const armGeo = new THREE.BoxGeometry(0.1, 0.6, 0.1);
-      const arm = new THREE.Mesh(armGeo, baseMat);
-      arm.position.set(0, 1.85, 0);
-      group.add(arm);
+      // Server body
+      const serverBody = new THREE.Mesh(new THREE.BoxGeometry(1.5, 2, 1.2), mintGreen);
+      serverBody.position.y = 1.25;
+      serverBody.castShadow = true;
+      group.add(serverBody);
 
-      // Press head
-      const headGeo = new THREE.BoxGeometry(0.4, 0.15, 0.3);
-      const head = new THREE.Mesh(headGeo, baseMat);
-      head.position.set(0, 2.2, 0);
-      group.add(head);
+      // White frame
+      const frameGeo = new THREE.EdgesGeometry(new THREE.BoxGeometry(1.55, 2.05, 1.25));
+      const frame = new THREE.LineSegments(frameGeo, new THREE.LineBasicMaterial({ color: 0xffffff }));
+      frame.position.y = 1.25;
+      group.add(frame);
 
-      // Signal waves
-      const waveGeo = new THREE.TorusGeometry(0.25, 0.02, 8, 16, Math.PI);
-      const waveMat = new THREE.MeshBasicMaterial({ color: 0x00e5ff, transparent: true, opacity: 0.6 });
-      for (let i = 0; i < 2; i++) {
-        const wave = new THREE.Mesh(waveGeo, waveMat);
-        wave.position.set(-0.5 - i * 0.2, 1.5, 0);
-        wave.rotation.z = Math.PI / 2;
-        wave.scale.set(0.8 + i * 0.3, 0.8 + i * 0.3, 1);
-        group.add(wave);
+      // Shield icon (purple)
+      const shieldShape = new THREE.Shape();
+      shieldShape.moveTo(0, 0.4);
+      shieldShape.quadraticCurveTo(0.35, 0.45, 0.35, 0.15);
+      shieldShape.lineTo(0.35, -0.15);
+      shieldShape.quadraticCurveTo(0, -0.45, 0, -0.45);
+      shieldShape.quadraticCurveTo(0, -0.45, -0.35, -0.15);
+      shieldShape.lineTo(-0.35, 0.15);
+      shieldShape.quadraticCurveTo(-0.35, 0.45, 0, 0.4);
 
-        const wave2 = new THREE.Mesh(waveGeo, waveMat);
-        wave2.position.set(0.5 + i * 0.2, 1.5, 0);
-        wave2.rotation.z = -Math.PI / 2;
-        wave2.scale.set(0.8 + i * 0.3, 0.8 + i * 0.3, 1);
-        group.add(wave2);
-      }
-    }
+      const shieldGeo = new THREE.ExtrudeGeometry(shieldShape, { depth: 0.1, bevelEnabled: false });
+      const shield = new THREE.Mesh(shieldGeo, new THREE.MeshStandardMaterial({
+        color: 0x9c7cf4, emissive: 0x9c7cf4, emissiveIntensity: 0.4
+      }));
+      shield.position.set(0, 1.6, 0.65);
+      shield.scale.set(0.8, 0.8, 1);
+      group.add(shield);
 
-    function addSensorIcon(group) {
-      // Sensor box with signal waves
-      const boxGeo = new THREE.BoxGeometry(0.5, 0.4, 0.3);
-      const boxMat = new THREE.MeshStandardMaterial({ color: 0x00e5ff, emissive: 0x00e5ff, emissiveIntensity: 0.3 });
-      const box = new THREE.Mesh(boxGeo, boxMat);
-      box.position.y = 1.5;
-      group.add(box);
+      // Lightning bolt on shield
+      const boltGeo = new THREE.BufferGeometry();
+      const boltVertices = new Float32Array([
+        0.05, 0.2, 0.12,  -0.1, 0, 0.12,  0.02, 0, 0.12,
+        0.02, 0, 0.12,  -0.05, -0.2, 0.12,  0.12, 0.02, 0.12,
+        0.12, 0.02, 0.12,  0, 0.02, 0.12,  0.05, 0.2, 0.12
+      ]);
+      boltGeo.setAttribute('position', new THREE.BufferAttribute(boltVertices, 3));
+      const bolt = new THREE.Mesh(boltGeo, new THREE.MeshBasicMaterial({ color: 0xffd700 }));
+      bolt.position.set(0, 1.6, 0.66);
+      group.add(bolt);
 
-      // Sensor lens
-      const lensGeo = new THREE.SphereGeometry(0.12, 16, 16);
-      const lensMat = new THREE.MeshBasicMaterial({ color: 0x00ffff });
-      const lens = new THREE.Mesh(lensGeo, lensMat);
-      lens.position.set(0, 1.5, 0.2);
-      group.add(lens);
+      // Floating text panel
+      const textPanel = new THREE.Mesh(new THREE.BoxGeometry(1.8, 1.2, 0.05), glassMaterial);
+      textPanel.position.set(-1.2, 2.2, 0.8);
+      textPanel.rotation.y = 0.3;
+      group.add(textPanel);
 
-      // Signal emanating
-      for (let i = 0; i < 3; i++) {
-        const waveGeo = new THREE.RingGeometry(0.15 + i * 0.12, 0.18 + i * 0.12, 16);
-        const waveMat = new THREE.MeshBasicMaterial({ color: 0x00e5ff, transparent: true, opacity: 0.5 - i * 0.15, side: THREE.DoubleSide });
-        const wave = new THREE.Mesh(waveGeo, waveMat);
-        wave.position.set(0, 1.5, 0.3 + i * 0.1);
-        group.add(wave);
-      }
-    }
+      // Text panel frame
+      const textFrameGeo = new THREE.EdgesGeometry(new THREE.BoxGeometry(1.8, 1.2, 0.05));
+      const textFrame = new THREE.LineSegments(textFrameGeo, new THREE.LineBasicMaterial({ color: 0x00e5ff, transparent: true, opacity: 0.7 }));
+      textFrame.position.copy(textPanel.position);
+      textFrame.rotation.copy(textPanel.rotation);
+      group.add(textFrame);
 
-    function addMachineMeterIcon(group) {
-      // Meter/gauge display
-      const screenGeo = new THREE.BoxGeometry(0.7, 0.5, 0.1);
-      const screenMat = new THREE.MeshStandardMaterial({ color: 0x1a1a2a });
-      const screen = new THREE.Mesh(screenGeo, screenMat);
-      screen.position.set(0, 1.5, 0);
-      group.add(screen);
-
-      // Display content (gauge arc)
-      const arcGeo = new THREE.TorusGeometry(0.18, 0.03, 8, 16, Math.PI);
-      const arcMat = new THREE.MeshBasicMaterial({ color: 0x00e5ff });
-      const arc = new THREE.Mesh(arcGeo, arcMat);
-      arc.position.set(0, 1.45, 0.06);
-      arc.rotation.z = Math.PI;
-      group.add(arc);
-
-      // Needle
-      const needleGeo = new THREE.BoxGeometry(0.02, 0.15, 0.02);
-      const needleMat = new THREE.MeshBasicMaterial({ color: 0xff6b6b });
-      const needle = new THREE.Mesh(needleGeo, needleMat);
-      needle.position.set(0.05, 1.52, 0.07);
-      needle.rotation.z = Math.PI / 6;
-      group.add(needle);
-
-      // Center point
-      const centerGeo = new THREE.SphereGeometry(0.04, 8, 8);
-      const center = new THREE.Mesh(centerGeo, new THREE.MeshBasicMaterial({ color: 0x00e5ff }));
-      center.position.set(0, 1.45, 0.07);
-      group.add(center);
-    }
-
-    function addDigitalAnalogIcon(group) {
-      // Waveform display
-      const screenGeo = new THREE.BoxGeometry(0.7, 0.5, 0.1);
-      const screenMat = new THREE.MeshStandardMaterial({ color: 0x1a1a2a });
-      const screen = new THREE.Mesh(screenGeo, screenMat);
-      screen.position.set(0, 1.5, 0);
-      group.add(screen);
-
-      // Sine wave
-      const points = [];
-      for (let i = 0; i <= 20; i++) {
-        const x = (i / 20 - 0.5) * 0.6;
-        const y = Math.sin(i / 20 * Math.PI * 3) * 0.15;
-        points.push(new THREE.Vector3(x, 1.5 + y, 0.06));
-      }
-      const waveGeo = new THREE.BufferGeometry().setFromPoints(points);
-      const waveMat = new THREE.LineBasicMaterial({ color: 0x00e5ff });
-      const wave = new THREE.Line(waveGeo, waveMat);
-      group.add(wave);
-
-      // Grid lines
-      for (let i = 0; i < 3; i++) {
-        const lineGeo = new THREE.BufferGeometry().setFromPoints([
-          new THREE.Vector3(-0.3, 1.35 + i * 0.15, 0.055),
-          new THREE.Vector3(0.3, 1.35 + i * 0.15, 0.055)
-        ]);
-        const line = new THREE.Line(lineGeo, new THREE.LineBasicMaterial({ color: 0x00e5ff, transparent: true, opacity: 0.3 }));
+      // Simulated text lines
+      for (let i = 0; i < 4; i++) {
+        const line = new THREE.Mesh(
+          new THREE.BoxGeometry(1.2 - i * 0.2, 0.08, 0.01),
+          new THREE.MeshBasicMaterial({ color: 0x00e5ff, transparent: true, opacity: 0.6 })
+        );
+        line.position.set(-1.2, 2.5 - i * 0.2, 0.83);
+        line.rotation.y = 0.3;
         group.add(line);
       }
-    }
 
-    function addCommunicationIcon(group) {
-      // Network nodes
-      const nodeMat = new THREE.MeshBasicMaterial({ color: 0x00e5ff });
-      const nodeGeo = new THREE.SphereGeometry(0.1, 16, 16);
-
-      const positions = [
-        [0, 1.7, 0],
-        [-0.2, 1.4, 0],
-        [0.2, 1.4, 0],
-        [0, 1.4, 0.2],
-        [0, 1.4, -0.2]
-      ];
-
-      positions.forEach(pos => {
-        const node = new THREE.Mesh(nodeGeo, nodeMat);
-        node.position.set(...pos);
-        group.add(node);
-      });
-
-      // Connection lines
-      const lineMat = new THREE.LineBasicMaterial({ color: 0x00e5ff, transparent: true, opacity: 0.6 });
-      positions.slice(1).forEach(pos => {
-        const lineGeo = new THREE.BufferGeometry().setFromPoints([
-          new THREE.Vector3(0, 1.7, 0),
-          new THREE.Vector3(...pos)
-        ]);
-        const line = new THREE.Line(lineGeo, lineMat);
-        group.add(line);
-      });
-    }
-
-    function addPLCIcon(group) {
-      // Central processor chip
-      const chipGeo = new THREE.BoxGeometry(0.6, 0.15, 0.6);
-      const chipMat = new THREE.MeshStandardMaterial({ color: 0x333344, metalness: 0.8 });
-      const chip = new THREE.Mesh(chipGeo, chipMat);
-      chip.position.y = 1.4;
-      group.add(chip);
-
-      // Chip surface detail
-      const surfaceGeo = new THREE.BoxGeometry(0.4, 0.02, 0.4);
-      const surfaceMat = new THREE.MeshStandardMaterial({ color: 0x00e5ff, emissive: 0x00e5ff, emissiveIntensity: 0.3 });
-      const surface = new THREE.Mesh(surfaceGeo, surfaceMat);
-      surface.position.y = 1.49;
-      group.add(surface);
-
-      // Pins around chip
-      const pinGeo = new THREE.BoxGeometry(0.03, 0.1, 0.03);
-      const pinMat = new THREE.MeshStandardMaterial({ color: 0x888888, metalness: 0.9 });
-      for (let side = 0; side < 4; side++) {
-        for (let i = 0; i < 4; i++) {
-          const pin = new THREE.Mesh(pinGeo, pinMat);
-          const offset = (i - 1.5) * 0.12;
-          switch(side) {
-            case 0: pin.position.set(offset, 1.35, 0.35); break;
-            case 1: pin.position.set(offset, 1.35, -0.35); break;
-            case 2: pin.position.set(0.35, 1.35, offset); break;
-            case 3: pin.position.set(-0.35, 1.35, offset); break;
-          }
-          group.add(pin);
-        }
-      }
-
-      // Center indicator LED
-      const ledGeo = new THREE.SphereGeometry(0.08, 16, 16);
-      const ledMat = new THREE.MeshBasicMaterial({ color: 0x00ff88 });
-      const led = new THREE.Mesh(ledGeo, ledMat);
-      led.position.y = 1.55;
-      group.add(led);
-    }
-
-    function addEdgeDeviceIcon(group) {
-      // Gear/processing symbol
-      const gearGeo = new THREE.TorusGeometry(0.25, 0.06, 8, 8);
-      const gearMat = new THREE.MeshStandardMaterial({ color: 0x00e5ff, emissive: 0x00e5ff, emissiveIntensity: 0.3 });
-      const gear = new THREE.Mesh(gearGeo, gearMat);
-      gear.rotation.x = -Math.PI / 2;
-      gear.position.y = 1.5;
-      group.add(gear);
-
-      // Gear teeth
-      for (let i = 0; i < 8; i++) {
-        const angle = (i / 8) * Math.PI * 2;
-        const toothGeo = new THREE.BoxGeometry(0.08, 0.05, 0.1);
-        const tooth = new THREE.Mesh(toothGeo, gearMat);
-        tooth.position.set(Math.cos(angle) * 0.32, 1.5, Math.sin(angle) * 0.32);
-        tooth.rotation.y = -angle;
-        group.add(tooth);
-      }
-
-      // Center circle
-      const centerGeo = new THREE.CylinderGeometry(0.1, 0.1, 0.1, 16);
-      const center = new THREE.Mesh(centerGeo, gearMat);
-      center.position.y = 1.5;
-      group.add(center);
-    }
-
-    function addMQTTIcon(group) {
-      // Data protocol stack/helix
-      const helixMat = new THREE.MeshBasicMaterial({ color: 0x00e5ff });
-
-      for (let i = 0; i < 12; i++) {
-        const angle = (i / 12) * Math.PI * 4;
-        const y = 1.3 + (i / 12) * 0.5;
-        const sphereGeo = new THREE.SphereGeometry(0.06, 8, 8);
-        const sphere = new THREE.Mesh(sphereGeo, helixMat);
-        sphere.position.set(Math.cos(angle) * 0.2, y, Math.sin(angle) * 0.2);
-        group.add(sphere);
-      }
-
-      // Central tube
-      const tubeGeo = new THREE.CylinderGeometry(0.05, 0.05, 0.5, 8);
-      const tube = new THREE.Mesh(tubeGeo, new THREE.MeshStandardMaterial({ color: 0x00e5ff, transparent: true, opacity: 0.5 }));
-      tube.position.y = 1.55;
-      group.add(tube);
-    }
-
-    function addCloudIcon(group) {
-      // Cloud with globe
-      const cloudMat = new THREE.MeshStandardMaterial({ color: 0x00e5ff, emissive: 0x00e5ff, emissiveIntensity: 0.3 });
-
-      // Globe sphere
-      const globeGeo = new THREE.SphereGeometry(0.25, 24, 24);
-      const globe = new THREE.Mesh(globeGeo, cloudMat);
-      globe.position.y = 1.5;
-      group.add(globe);
-
-      // Globe rings (latitude/longitude)
-      const ringMat = new THREE.LineBasicMaterial({ color: 0x00ffff, transparent: true, opacity: 0.6 });
-
-      // Equator
-      const equatorGeo = new THREE.RingGeometry(0.24, 0.26, 32);
-      const equator = new THREE.Mesh(equatorGeo, new THREE.MeshBasicMaterial({ color: 0x00ffff, transparent: true, opacity: 0.4, side: THREE.DoubleSide }));
-      equator.rotation.x = Math.PI / 2;
-      equator.position.y = 1.5;
-      group.add(equator);
-
-      // Meridian
-      const meridianGeo = new THREE.RingGeometry(0.24, 0.26, 32);
-      const meridian = new THREE.Mesh(meridianGeo, new THREE.MeshBasicMaterial({ color: 0x00ffff, transparent: true, opacity: 0.4, side: THREE.DoubleSide }));
-      meridian.position.y = 1.5;
-      group.add(meridian);
-
-      // Upload/download arrows
-      const arrowMat = new THREE.MeshBasicMaterial({ color: 0x00ff88 });
-      const arrowGeo = new THREE.ConeGeometry(0.08, 0.15, 8);
-
-      const upArrow = new THREE.Mesh(arrowGeo, arrowMat);
-      upArrow.position.set(0.35, 1.6, 0);
-      group.add(upArrow);
-
-      const downArrow = new THREE.Mesh(arrowGeo, new THREE.MeshBasicMaterial({ color: 0xffa726 }));
-      downArrow.position.set(0.35, 1.35, 0);
-      downArrow.rotation.z = Math.PI;
-      group.add(downArrow);
-    }
-
-    // ============================================
-    // CREATE INFO DISPLAY PANEL (floating)
-    // ============================================
-    function createInfoDisplay(text, position) {
-      const group = new THREE.Group();
-
-      // Glass panel background
-      const panelGeo = new THREE.PlaneGeometry(2.5, 1.5);
-      const panelMat = new THREE.MeshStandardMaterial({
-        color: 0x88ccff,
-        transparent: true,
-        opacity: 0.15,
-        side: THREE.DoubleSide
-      });
-      const panel = new THREE.Mesh(panelGeo, panelMat);
-      group.add(panel);
-
-      // Frame edges
-      const edgesGeo = new THREE.EdgesGeometry(panelGeo);
-      const edges = new THREE.LineSegments(edgesGeo, new THREE.LineBasicMaterial({ color: 0x00e5ff, transparent: true, opacity: 0.6 }));
-      group.add(edges);
-
-      // Position and angle
-      group.position.set(...position);
-      group.lookAt(0, position[1], 0);
+      // Status bar (cyan glow)
+      const statusBar = new THREE.Mesh(new THREE.BoxGeometry(1.2, 0.1, 0.05), cyanGlow);
+      statusBar.position.set(0, 0.5, 0.65);
+      group.add(statusBar);
 
       return group;
     }
 
     // ============================================
-    // DATA FLOW PIPES (curved with dashed effect)
+    // RIGHT SIDE PLC CONTROLLER (with dashboard screen)
     // ============================================
-    function createDataPipe(start, end, color, isDataIn = true) {
-      const midY = Math.max(start[1], end[1]) + 0.5;
-      const midPoint = [
-        (start[0] + end[0]) / 2,
-        midY,
-        (start[2] + end[2]) / 2
-      ];
+    function createPLCController() {
+      const group = new THREE.Group();
 
-      const curve = new THREE.CatmullRomCurve3([
-        new THREE.Vector3(...start),
-        new THREE.Vector3(...midPoint),
-        new THREE.Vector3(...end)
-      ]);
+      // Base platform
+      const base = new THREE.Mesh(new THREE.BoxGeometry(2.2, 0.35, 1.8), grayMetal);
+      base.position.y = 0.175;
+      base.castShadow = true;
+      group.add(base);
 
-      // Main pipe (white outer shell)
-      const tubeGeo = new THREE.TubeGeometry(curve, 32, 0.06, 8, false);
-      const tubeMat = new THREE.MeshStandardMaterial({
+      // Main body
+      const body = new THREE.Mesh(new THREE.BoxGeometry(1.8, 1.6, 1.5), whiteMetal);
+      body.position.y = 1.15;
+      body.castShadow = true;
+      group.add(body);
+
+      // Screen area
+      const screenBg = new THREE.Mesh(new THREE.BoxGeometry(1.5, 0.9, 0.08),
+        new THREE.MeshStandardMaterial({ color: 0xd5f5e3, metalness: 0.1, roughness: 0.3 }));
+      screenBg.position.set(0, 1.4, 0.8);
+      group.add(screenBg);
+
+      // Screen border
+      const screenBorder = new THREE.Mesh(new THREE.BoxGeometry(1.6, 1.0, 0.05), darkMetal);
+      screenBorder.position.set(0, 1.4, 0.75);
+      group.add(screenBorder);
+
+      // Dashboard elements on screen
+      // Person icon
+      const headGeo = new THREE.SphereGeometry(0.1, 16, 16);
+      const head = new THREE.Mesh(headGeo, new THREE.MeshBasicMaterial({ color: 0x9c7cf4 }));
+      head.position.set(-0.45, 1.55, 0.85);
+      group.add(head);
+
+      const bodyGeo = new THREE.CylinderGeometry(0.06, 0.1, 0.2, 8);
+      const personBody = new THREE.Mesh(bodyGeo, new THREE.MeshBasicMaterial({ color: 0x9c7cf4 }));
+      personBody.position.set(-0.45, 1.35, 0.85);
+      group.add(personBody);
+
+      // Status indicators
+      const colors = [0xffeb3b, 0xff9800, 0x4caf50];
+      for (let i = 0; i < 3; i++) {
+        const indicator = new THREE.Mesh(
+          new THREE.BoxGeometry(0.25, 0.15, 0.02),
+          new THREE.MeshBasicMaterial({ color: colors[i] })
+        );
+        indicator.position.set(-0.05 + i * 0.35, 1.55, 0.85);
+        group.add(indicator);
+      }
+
+      // Green status sphere
+      const statusSphere = new THREE.Mesh(
+        new THREE.SphereGeometry(0.15, 16, 16),
+        new THREE.MeshStandardMaterial({ color: 0x00e5aa, emissive: 0x00e5aa, emissiveIntensity: 0.5 })
+      );
+      statusSphere.position.set(0, 0.6, 0.9);
+      group.add(statusSphere);
+
+      // Connector port
+      const port = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.2, 0.4), darkMetal);
+      port.position.set(-1.05, 1, 0);
+      group.add(port);
+
+      return group;
+    }
+
+    // ============================================
+    // FAR RIGHT CLOUD/DATA BLOCK
+    // ============================================
+    function createCloudBlock() {
+      const group = new THREE.Group();
+
+      // Main block
+      const block = new THREE.Mesh(new THREE.BoxGeometry(2.5, 3, 2),
+        new THREE.MeshStandardMaterial({ color: 0xe8e8e8, metalness: 0.2, roughness: 0.4 }));
+      block.position.y = 1.5;
+      block.castShadow = true;
+      group.add(block);
+
+      // Dark stripes/vents
+      for (let i = 0; i < 4; i++) {
+        const stripe = new THREE.Mesh(
+          new THREE.BoxGeometry(2.6, 0.08, 0.1),
+          darkMetal
+        );
+        stripe.position.set(0, 0.6 + i * 0.5, 1.05);
+        group.add(stripe);
+      }
+
+      // Top platform
+      const topPlatform = new THREE.Mesh(new THREE.BoxGeometry(2.6, 0.15, 2.1), grayMetal);
+      topPlatform.position.y = 3.08;
+      group.add(topPlatform);
+
+      // Frame edges
+      const frameGeo = new THREE.EdgesGeometry(new THREE.BoxGeometry(2.5, 3, 2));
+      const frame = new THREE.LineSegments(frameGeo, new THREE.LineBasicMaterial({ color: 0x888888 }));
+      frame.position.y = 1.5;
+      group.add(frame);
+
+      return group;
+    }
+
+    // ============================================
+    // RIGHT DASHBOARD PANEL (vertical screen)
+    // ============================================
+    function createDashboardPanel() {
+      const group = new THREE.Group();
+
+      // Stand base
+      const standBase = new THREE.Mesh(new THREE.BoxGeometry(1.2, 0.2, 0.8), darkMetal);
+      standBase.position.y = 0.1;
+      standBase.castShadow = true;
+      group.add(standBase);
+
+      // Stand pole
+      const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.08, 1.8, 16), grayMetal);
+      pole.position.set(0, 1.1, 0);
+      group.add(pole);
+
+      // Main screen (glass panel)
+      const screen = new THREE.Mesh(new THREE.BoxGeometry(2, 2.5, 0.08), glassMaterial);
+      screen.position.set(0, 2.8, 0);
+      group.add(screen);
+
+      // Screen frame
+      const screenFrameGeo = new THREE.EdgesGeometry(new THREE.BoxGeometry(2, 2.5, 0.08));
+      const screenFrame = new THREE.LineSegments(screenFrameGeo, new THREE.LineBasicMaterial({ color: 0x00e5ff }));
+      screenFrame.position.copy(screen.position);
+      group.add(screenFrame);
+
+      // Inner screen content frame
+      const innerFrame = new THREE.Mesh(
+        new THREE.BoxGeometry(1.8, 2.3, 0.02),
+        new THREE.MeshBasicMaterial({ color: 0x00e5ff, transparent: true, opacity: 0.1 })
+      );
+      innerFrame.position.set(0, 2.8, 0.05);
+      group.add(innerFrame);
+
+      // Chart elements
+      // Pie chart
+      const pieGeo = new THREE.CircleGeometry(0.3, 32);
+      const pie = new THREE.Mesh(pieGeo, new THREE.MeshBasicMaterial({
+        color: 0x00e5ff, transparent: true, opacity: 0.7
+      }));
+      pie.position.set(-0.5, 3.3, 0.06);
+      group.add(pie);
+
+      // Pie segment
+      const segmentGeo = new THREE.CircleGeometry(0.3, 32, 0, Math.PI * 0.7);
+      const segment = new THREE.Mesh(segmentGeo, new THREE.MeshBasicMaterial({ color: 0xff6b9d }));
+      segment.position.set(-0.5, 3.3, 0.07);
+      group.add(segment);
+
+      // Bar chart
+      const barHeights = [0.5, 0.7, 0.4, 0.8, 0.6];
+      const barColors = [0x00e5ff, 0x00e5aa, 0xffeb3b, 0xff6b9d, 0x4488ff];
+      for (let i = 0; i < 5; i++) {
+        const bar = new THREE.Mesh(
+          new THREE.BoxGeometry(0.12, barHeights[i], 0.02),
+          new THREE.MeshBasicMaterial({ color: barColors[i] })
+        );
+        bar.position.set(0.25 + i * 0.18, 2.3 + barHeights[i] / 2, 0.06);
+        group.add(bar);
+      }
+
+      // Line chart dots
+      const dotPositions = [[-0.6, 2.0], [-0.3, 2.2], [0, 2.1], [0.3, 2.4], [0.6, 2.3]];
+      dotPositions.forEach(([x, y]) => {
+        const dot = new THREE.Mesh(
+          new THREE.SphereGeometry(0.05, 8, 8),
+          new THREE.MeshBasicMaterial({ color: 0x00e5ff })
+        );
+        dot.position.set(x, y, 0.06);
+        group.add(dot);
+      });
+
+      return group;
+    }
+
+    // ============================================
+    // DATA FLOW PIPES
+    // ============================================
+    function createPipe(points, color, radius = 0.08) {
+      const curve = new THREE.CatmullRomCurve3(points.map(p => new THREE.Vector3(...p)));
+
+      // Outer white pipe
+      const tubeGeo = new THREE.TubeGeometry(curve, 64, radius, 8, false);
+      const tube = new THREE.Mesh(tubeGeo, new THREE.MeshStandardMaterial({
         color: 0xffffff,
         metalness: 0.3,
         roughness: 0.4,
         transparent: true,
-        opacity: 0.7
-      });
-      const pipe = new THREE.Mesh(tubeGeo, tubeMat);
-      scene.add(pipe);
+        opacity: 0.85
+      }));
+      tube.castShadow = true;
+      scene.add(tube);
 
       // Inner glow line
-      const points = curve.getPoints(50);
-      const lineGeo = new THREE.BufferGeometry().setFromPoints(points);
-      const lineMat = new THREE.LineBasicMaterial({
-        color: color,
-        transparent: true,
-        opacity: 0.8
-      });
-      const line = new THREE.Line(lineGeo, lineMat);
-      scene.add(line);
-
-      dataFlowLines.push({ pipe, line, curve, color, isDataIn, startTime: Math.random() * 10 });
-
-      return { pipe, line, curve };
-    }
-
-    // Create animated data particle
-    function createDataParticle(curve, color) {
-      const particleGeo = new THREE.SphereGeometry(0.08, 8, 8);
-      const particleMat = new THREE.MeshBasicMaterial({
+      const linePoints = curve.getPoints(100);
+      const lineGeo = new THREE.BufferGeometry().setFromPoints(linePoints);
+      const line = new THREE.Line(lineGeo, new THREE.LineBasicMaterial({
         color: color,
         transparent: true,
         opacity: 0.9
+      }));
+      scene.add(line);
+
+      return { tube, line, curve, color };
+    }
+
+    function createPipeWithBends(segments, color, radius = 0.08) {
+      const pipes = [];
+      segments.forEach(seg => {
+        const pipe = createPipe(seg, color, radius);
+        pipes.push(pipe);
       });
-      const particle = new THREE.Mesh(particleGeo, particleMat);
-      scene.add(particle);
-      return particle;
+      return pipes;
+    }
+
+    // Create data particle
+    function createParticle(curve, color, speed = 0.005) {
+      const geo = new THREE.SphereGeometry(0.1, 8, 8);
+      const mat = new THREE.MeshBasicMaterial({ color: color, transparent: true, opacity: 0.9 });
+      const mesh = new THREE.Mesh(geo, mat);
+      scene.add(mesh);
+      return { mesh, curve, progress: Math.random(), speed };
     }
 
     // ============================================
-    // BUILD THE HUB-AND-SPOKE ARCHITECTURE
+    // BUILD THE SCENE
     // ============================================
 
-    // Center: PLC Controller
-    const plcNode = createHexNode({ color: 0x00e5ff, iconColor: 0x00e5ff, size: 2 });
-    addPLCIcon(plcNode);
-    plcNode.position.set(0, 0, 0);
-    plcNode.userData = { type: 'plc', name: 'PLC / Controller' };
-    scene.add(plcNode);
-    objectsMap.plc = plcNode;
+    // Central Press Machine
+    const pressMachine = createPressMachine();
+    pressMachine.position.set(0, 0, 0);
+    pressMachine.userData = { type: 'press', name: 'Press Machine' };
+    scene.add(pressMachine);
+    objectsMap.press = pressMachine;
 
-    // Top: Press Stamping
-    const pressNode = createHexNode({ color: 0x00e5ff, iconColor: 0x00e5ff });
-    addPressStampingIcon(pressNode);
-    pressNode.position.set(0, 0, -8);
-    pressNode.userData = { type: 'press', name: 'Press Stamping' };
-    scene.add(pressNode);
-    objectsMap.press = pressNode;
+    // Left Analytics Module
+    const analyticsModule = createAnalyticsModule();
+    analyticsModule.position.set(-6, 0, 1);
+    analyticsModule.rotation.y = 0.3;
+    analyticsModule.userData = { type: 'analytics', name: 'Analytics Dashboard' };
+    scene.add(analyticsModule);
+    objectsMap.analytics = analyticsModule;
 
-    // Top-Left: Sensor
-    const sensorNode = createHexNode({ color: 0x00e5ff, iconColor: 0x00e5ff });
-    addSensorIcon(sensorNode);
-    sensorNode.position.set(-7, 0, -5);
-    sensorNode.userData = { type: 'sensor', name: 'Sensor' };
-    scene.add(sensorNode);
-    objectsMap.sensor = sensorNode;
+    // Upper-Left Controller
+    const controllerModule = createControllerModule();
+    controllerModule.position.set(-5, 0, -3);
+    controllerModule.rotation.y = 0.4;
+    controllerModule.userData = { type: 'controller', name: 'Security Controller' };
+    scene.add(controllerModule);
+    objectsMap.controller = controllerModule;
 
-    // Top-Right: Machine/Meters
-    const machineNode = createHexNode({ color: 0x00e5ff, iconColor: 0x00e5ff });
-    addMachineMeterIcon(machineNode);
-    machineNode.position.set(7, 0, -5);
-    machineNode.userData = { type: 'machine', name: 'Machine / Meters' };
-    scene.add(machineNode);
-    objectsMap.machine = machineNode;
+    // Right PLC Controller
+    const plcController = createPLCController();
+    plcController.position.set(5, 0, 0);
+    plcController.rotation.y = -0.2;
+    plcController.userData = { type: 'plc', name: 'PLC Controller' };
+    scene.add(plcController);
+    objectsMap.plc = plcController;
 
-    // Left: Digital/Analog
-    const digitalNode = createHexNode({ color: 0x00e5ff, iconColor: 0x00e5ff });
-    addDigitalAnalogIcon(digitalNode);
-    digitalNode.position.set(-8, 0, 2);
-    digitalNode.userData = { type: 'digital', name: 'Digital / Analog' };
-    scene.add(digitalNode);
-    objectsMap.digital = digitalNode;
+    // Far Right Cloud Block
+    const cloudBlock = createCloudBlock();
+    cloudBlock.position.set(12, 0, -2);
+    cloudBlock.userData = { type: 'cloud', name: 'Cloud / Data Center' };
+    scene.add(cloudBlock);
+    objectsMap.cloud = cloudBlock;
 
-    // Right: Communication
-    const commNode = createHexNode({ color: 0x00e5ff, iconColor: 0x00e5ff });
-    addCommunicationIcon(commNode);
-    commNode.position.set(8, 0, 2);
-    commNode.userData = { type: 'communication', name: '25+ Communication' };
-    scene.add(commNode);
-    objectsMap.communication = commNode;
-
-    // Below Center: Edge Device
-    const edgeNode = createHexNode({ color: 0x00e5ff, iconColor: 0x00e5ff });
-    addEdgeDeviceIcon(edgeNode);
-    edgeNode.position.set(0, 0, 5);
-    edgeNode.userData = { type: 'edge', name: 'Edge Device' };
-    scene.add(edgeNode);
-    objectsMap.edge = edgeNode;
-
-    // Bottom-Left: MQTT/HTTP/API
-    const mqttNode = createHexNode({ color: 0x00e5ff, iconColor: 0x00e5ff });
-    addMQTTIcon(mqttNode);
-    mqttNode.position.set(-6, 0, 9);
-    mqttNode.userData = { type: 'mqtt', name: 'MQTT / HTTP / API' };
-    scene.add(mqttNode);
-    objectsMap.mqtt = mqttNode;
-
-    // Bottom-Right: Local Server/Cloud
-    const cloudNode = createHexNode({ color: 0x00e5ff, iconColor: 0x00e5ff });
-    addCloudIcon(cloudNode);
-    cloudNode.position.set(6, 0, 9);
-    cloudNode.userData = { type: 'cloud', name: 'Local Server / Cloud' };
-    scene.add(cloudNode);
-    objectsMap.cloud = cloudNode;
+    // Dashboard Panel (between PLC and Cloud)
+    const dashboardPanel = createDashboardPanel();
+    dashboardPanel.position.set(8.5, 0, 1.5);
+    dashboardPanel.rotation.y = -0.4;
+    dashboardPanel.userData = { type: 'dashboard', name: 'Dashboard' };
+    scene.add(dashboardPanel);
+    objectsMap.dashboard = dashboardPanel;
 
     // ============================================
-    // FLOATING INFO PANELS
-    // ============================================
-    const infoPanel1 = createInfoDisplay("Security Status\nActive", [-10, 4, -3]);
-    scene.add(infoPanel1);
-
-    const infoPanel2 = createInfoDisplay("System Metrics\nNormal", [10, 4, -3]);
-    scene.add(infoPanel2);
-
-    // ============================================
-    // DATA FLOW CONNECTIONS (matching flowchart)
+    // DATA FLOW CONNECTIONS
     // ============================================
 
-    // Data In (cyan/green) - to PLC
-    createDataPipe([0, 1.5, -8], [0, 2, -2], 0x00e5aa, true);  // Press -> PLC
-    createDataPipe([-7, 1.5, -5], [-2, 2, 0], 0x00e5aa, true);  // Sensor -> PLC
-    createDataPipe([7, 1.5, -5], [2, 2, 0], 0x00e5aa, true);    // Machine -> PLC
-    createDataPipe([-8, 1.5, 2], [-2, 2, 0], 0x00e5aa, true);   // Digital -> PLC
-    createDataPipe([8, 1.5, 2], [2, 2, 0], 0x00e5aa, true);     // Comm -> PLC
+    // Cyan pipes (data in / sensor data)
+    // Controller to Press Machine
+    const pipe1 = createPipe([
+      [-4, 1, -2.5],
+      [-2.5, 1.5, -1.5],
+      [-1.8, 1.5, 0]
+    ], 0x00e5ff);
 
-    // Data Out (orange) - from PLC
-    createDataPipe([0, 2, 2], [0, 1.5, 5], 0xffa726, false);    // PLC -> Edge
-    createDataPipe([0, 1.5, 5], [-6, 1.5, 9], 0xffa726, false); // Edge -> MQTT
-    createDataPipe([0, 1.5, 5], [6, 1.5, 9], 0xffa726, false);  // Edge -> Cloud
+    // Analytics to Press Machine
+    const pipe2 = createPipe([
+      [-4.5, 0.8, 1],
+      [-2.5, 1, 0.5],
+      [-1.8, 1.2, 0]
+    ], 0x00e5ff);
+
+    // Orange pipes (data out)
+    // Press Machine to PLC
+    const pipe3Segments = [
+      [[1.8, 1.5, 0], [3, 1.5, 0], [3.8, 1.5, 0]],
+    ];
+    const pipe3 = createPipeWithBends(pipe3Segments, 0xffa726);
+
+    // PLC to Dashboard (with 90-degree bends)
+    const pipe4Segments = [
+      [[6.2, 1.2, 0], [7, 1.2, 0], [7, 1.2, 0.8], [7.5, 1.5, 1.2]]
+    ];
+    const pipe4 = createPipeWithBends(pipe4Segments, 0xffa726);
+
+    // Long pipeline to Cloud (with bends)
+    const pipe5Segments = [
+      [[6.2, 2, -0.5], [7.5, 2.5, -0.5], [7.5, 2.5, -1.5], [9, 2.5, -1.5], [9, 2.5, -2], [10.5, 2, -2]]
+    ];
+    const pipe5 = createPipeWithBends(pipe5Segments, 0xffa726, 0.1);
+
+    // Yellow accent line on the long pipeline
+    const yellowPipeSegments = [
+      [[7.5, 2.7, -1.5], [9, 2.7, -1.5], [9, 2.7, -2]]
+    ];
+    const yellowPipe = createPipeWithBends(yellowPipeSegments, 0xf5a623, 0.06);
 
     // ============================================
     // ANIMATED PARTICLES
     // ============================================
-    const particles = [];
+    const allPipes = [pipe1, pipe2, ...pipe3, ...pipe4, ...pipe5];
 
-    dataFlowLines.forEach((flowData, index) => {
-      for (let i = 0; i < 3; i++) {
-        const particle = createDataParticle(flowData.curve, flowData.color);
-        particles.push({
-          mesh: particle,
-          curve: flowData.curve,
-          progress: i * 0.33,
-          speed: 0.004 + Math.random() * 0.002,
-          isReverse: !flowData.isDataIn
-        });
+    allPipes.forEach(pipeData => {
+      for (let i = 0; i < 2; i++) {
+        const particle = createParticle(pipeData.curve, pipeData.color, 0.003 + Math.random() * 0.002);
+        particle.progress = i * 0.5;
+        particles.push(particle);
       }
     });
 
@@ -1170,140 +1191,95 @@
     // INFO PANEL DATA
     // ============================================
     const panelData = {
+      press: {
+        title: 'Press Machine',
+        subtitle: 'Central Processing Unit',
+        icon: '🏭',
+        gradient: 'linear-gradient(135deg, #555566, #333344)',
+        data: [
+          { label: 'Status', value: 'OPERATING', unit: '' },
+          { label: 'Stroke Count', value: '12,456', unit: 'cycles' },
+          { label: 'Current SPM', value: '42', unit: 'strokes/min' },
+          { label: 'Temperature', value: '45.2', unit: '°C' },
+          { label: 'Efficiency', value: '96', unit: '%' }
+        ],
+        flowTo: 'PLC Controller',
+        showCharts: true
+      },
+      analytics: {
+        title: 'Analytics Dashboard',
+        subtitle: 'Data Visualization',
+        icon: '📊',
+        gradient: 'linear-gradient(135deg, #00e5aa, #00b4d8)',
+        data: [
+          { label: 'Data Points', value: '1.2M', unit: 'records' },
+          { label: 'Update Rate', value: '100', unit: 'ms' },
+          { label: 'Accuracy', value: '99.7', unit: '%' },
+          { label: 'Active Charts', value: '8', unit: 'views' }
+        ],
+        flowTo: 'Press Machine',
+        showCharts: true
+      },
+      controller: {
+        title: 'Security Controller',
+        subtitle: 'Access & Safety',
+        icon: '🛡️',
+        gradient: 'linear-gradient(135deg, #9c7cf4, #6644ff)',
+        data: [
+          { label: 'Security Level', value: 'HIGH', unit: '' },
+          { label: 'Active Zones', value: '4', unit: 'areas' },
+          { label: 'Last Alert', value: 'None', unit: '' },
+          { label: 'Uptime', value: '99.9', unit: '%' }
+        ],
+        flowTo: 'Press Machine'
+      },
       plc: {
-        title: 'PLC / Controller',
-        subtitle: 'control logic',
+        title: 'PLC Controller',
+        subtitle: 'Siemens S7-1200',
         icon: '⚙️',
-        gradient: 'linear-gradient(135deg, #00e5ff, #00b4d8)',
+        gradient: 'linear-gradient(135deg, #4488ff, #6644ff)',
         data: [
           { label: 'Status', value: 'RUNNING', unit: '' },
           { label: 'CPU Load', value: '34', unit: '%' },
-          { label: 'Connected Devices', value: '8', unit: 'units' },
-          { label: 'Cycle Time', value: '12', unit: 'ms' },
-          { label: 'Memory Usage', value: '42', unit: '%' }
+          { label: 'I/O Modules', value: '12', unit: 'units' },
+          { label: 'Cycle Time', value: '8', unit: 'ms' }
         ],
-        flowTo: 'Edge Device',
-        showDashboard: true
-      },
-      press: {
-        title: 'Press Stamping',
-        subtitle: 'stroke counter',
-        icon: '🏭',
-        gradient: 'linear-gradient(135deg, #00e5aa, #00b4d8)',
-        data: [
-          { label: 'Stroke Count', value: '12,456', unit: 'cycles' },
-          { label: 'Current SPM', value: '42', unit: 'strokes/min' },
-          { label: 'Target SPM', value: '45', unit: 'strokes/min' },
-          { label: 'Efficiency', value: '93', unit: '%' }
-        ],
-        flowTo: 'PLC Controller',
-        showDashboard: true
-      },
-      sensor: {
-        title: 'Sensor',
-        subtitle: 'data collection',
-        icon: '📡',
-        gradient: 'linear-gradient(135deg, #00e5ff, #6644ff)',
-        data: [
-          { label: 'Active Sensors', value: '12', unit: 'units' },
-          { label: 'Sample Rate', value: '1000', unit: 'Hz' },
-          { label: 'Data Quality', value: '99.2', unit: '%' },
-          { label: 'Last Update', value: '< 1', unit: 'sec ago' }
-        ],
-        flowTo: 'PLC Controller',
-        showDashboard: true
-      },
-      machine: {
-        title: 'Machine / Meters',
-        subtitle: 'equipment',
-        icon: '🔧',
-        gradient: 'linear-gradient(135deg, #4488ff, #00e5ff)',
-        data: [
-          { label: 'Machines Online', value: '8', unit: 'units' },
-          { label: 'Power Draw', value: '24.5', unit: 'kW' },
-          { label: 'Temperature', value: '45.2', unit: '°C' },
-          { label: 'Vibration', value: '0.8', unit: 'mm/s' }
-        ],
-        flowTo: 'PLC Controller',
-        showDashboard: true
-      },
-      digital: {
-        title: 'Digital / Analog',
-        subtitle: 'signal processing',
-        icon: '📊',
-        gradient: 'linear-gradient(135deg, #6644ff, #4488ff)',
-        data: [
-          { label: 'Digital Inputs', value: '32', unit: 'channels' },
-          { label: 'Analog Inputs', value: '16', unit: 'channels' },
-          { label: 'Resolution', value: '16', unit: 'bit' },
-          { label: 'Scan Rate', value: '500', unit: 'μs' }
-        ],
-        flowTo: 'PLC Controller',
-        showDashboard: true
-      },
-      communication: {
-        title: '25+ Communication',
-        subtitle: 'protocol',
-        icon: '🌐',
-        gradient: 'linear-gradient(135deg, #00b4d8, #00e5aa)',
-        data: [
-          { label: 'Active Protocols', value: '25+', unit: '' },
-          { label: 'Modbus TCP', value: 'ACTIVE', unit: '' },
-          { label: 'OPC UA', value: 'ACTIVE', unit: '' },
-          { label: 'Ethernet/IP', value: 'ACTIVE', unit: '' }
-        ],
-        flowTo: 'PLC Controller'
-      },
-      edge: {
-        title: 'Edge Device',
-        subtitle: 'local processing',
-        icon: '💻',
-        gradient: 'linear-gradient(135deg, #00e5ff, #00e5aa)',
-        data: [
-          { label: 'CPU Usage', value: '28', unit: '%' },
-          { label: 'Memory', value: '4.2', unit: 'GB used' },
-          { label: 'Storage', value: '128', unit: 'GB' },
-          { label: 'Uptime', value: '45', unit: 'days' }
-        ],
-        flowTo: 'Cloud / MQTT',
-        showDashboard: true
-      },
-      mqtt: {
-        title: 'MQTT / HTTP / API',
-        subtitle: 'data protocols',
-        icon: '📡',
-        gradient: 'linear-gradient(135deg, #6644ff, #9966ff)',
-        data: [
-          { label: 'MQTT Broker', value: 'CONNECTED', unit: '' },
-          { label: 'Messages/sec', value: '1,250', unit: 'msg' },
-          { label: 'Queue Depth', value: '12', unit: 'messages' },
-          { label: 'Latency', value: '8', unit: 'ms' }
-        ],
-        flowTo: 'Cloud Storage'
+        flowTo: 'Cloud Platform',
+        showCharts: true
       },
       cloud: {
-        title: 'Local Server / Cloud',
-        subtitle: 'data storage',
+        title: 'Cloud / Data Center',
+        subtitle: 'AWS + ThingsBoard',
         icon: '☁️',
         gradient: 'linear-gradient(135deg, #4488ff, #9966ff)',
-        isCloud: true,
         data: [
           { label: 'Connection', value: 'ACTIVE', unit: '' },
           { label: 'Data Synced', value: '99.8', unit: '%' },
           { label: 'Storage Used', value: '2.4', unit: 'TB' },
-          { label: 'Backup Status', value: 'CURRENT', unit: '' }
+          { label: 'Latency', value: '12', unit: 'ms' }
         ],
-        visualizations: [
-          { icon: '📈', name: 'Real-time Charts' },
-          { icon: '📊', name: 'Analytics' },
-          { icon: '🔔', name: 'Alerts' },
-          { icon: '📋', name: 'Reports' }
-        ]
+        flowTo: 'Dashboard',
+        showCharts: true
+      },
+      dashboard: {
+        title: 'Dashboard',
+        subtitle: 'Real-time Monitoring',
+        icon: '📈',
+        gradient: 'linear-gradient(135deg, #00e5ff, #00e5aa)',
+        data: [
+          { label: 'Active Widgets', value: '12', unit: 'panels' },
+          { label: 'Refresh Rate', value: '1', unit: 'sec' },
+          { label: 'Users Online', value: '3', unit: 'users' },
+          { label: 'Alerts', value: '0', unit: 'active' }
+        ],
+        flowTo: 'User Interface',
+        showCharts: true,
+        showFullDashboard: true
       }
     };
 
     // ============================================
-    // SHOW INFO PANEL WITH DASHBOARD
+    // SHOW INFO PANEL
     // ============================================
     function showInfoPanel(type) {
       const data = panelData[type];
@@ -1322,40 +1298,44 @@
         </div>
       `).join('');
 
-      let dashboardSection = '';
-      if (data.showDashboard) {
-        dashboardSection = `
-          <div class="dashboard-section">
-            <h4>Live Dashboard</h4>
-            <div class="chart-container">
-              <div class="mini-chart">
-                <div class="chart-title">Trend</div>
-                <div class="bar-chart">
-                  <div class="bar" style="height: 30px; background: #00e5ff;"></div>
-                  <div class="bar" style="height: 45px; background: #00e5aa;"></div>
-                  <div class="bar" style="height: 35px; background: #4488ff;"></div>
-                  <div class="bar" style="height: 50px; background: #00e5ff;"></div>
-                  <div class="bar" style="height: 40px; background: #00e5aa;"></div>
+      let chartsSection = '';
+      if (data.showCharts) {
+        chartsSection = `
+          <div class="dashboard-grid">
+            <div class="chart-card">
+              <h5>Trend Analysis</h5>
+              <div class="bar-chart">
+                <div class="bar" style="height: 35px; background: #00e5ff;"></div>
+                <div class="bar" style="height: 50px; background: #00e5aa;"></div>
+                <div class="bar" style="height: 40px; background: #4488ff;"></div>
+                <div class="bar" style="height: 55px; background: #00e5ff;"></div>
+                <div class="bar" style="height: 45px; background: #00e5aa;"></div>
+              </div>
+            </div>
+            <div class="chart-card">
+              <h5>Distribution</h5>
+              <div class="pie-chart"></div>
+            </div>
+            <div class="chart-card">
+              <h5>Performance</h5>
+              <div class="gauge-container">
+                <div class="gauge-bg">
+                  <div class="gauge-needle" style="--rotation: 25deg;"></div>
                 </div>
+                <div class="gauge-center"></div>
               </div>
-              <div class="mini-chart">
-                <div class="chart-title">Distribution</div>
-                <div class="pie-chart"></div>
-              </div>
-              <div class="mini-chart">
-                <div class="chart-title">Performance</div>
-                <div class="gauge-chart">
-                  <div class="gauge-needle"></div>
-                </div>
-              </div>
-              <div class="mini-chart">
-                <div class="chart-title">Activity</div>
-                <div class="line-chart">
-                  <div class="line-point" style="height: 20px;"></div>
-                  <div class="line-point" style="height: 35px;"></div>
-                  <div class="line-point" style="height: 25px;"></div>
-                  <div class="line-point" style="height: 40px;"></div>
-                  <div class="line-point" style="height: 30px;"></div>
+              <div class="gauge-value">78%</div>
+            </div>
+            <div class="chart-card">
+              <h5>Real-time</h5>
+              <div class="realtime-chart">
+                <div class="realtime-line"></div>
+                <div class="realtime-dots">
+                  <div class="realtime-dot" style="margin-bottom: 30%;"></div>
+                  <div class="realtime-dot" style="margin-bottom: 50%;"></div>
+                  <div class="realtime-dot" style="margin-bottom: 40%;"></div>
+                  <div class="realtime-dot" style="margin-bottom: 65%;"></div>
+                  <div class="realtime-dot" style="margin-bottom: 55%;"></div>
                 </div>
               </div>
             </div>
@@ -1363,18 +1343,27 @@
         `;
       }
 
-      let vizSection = '';
-      if (data.isCloud && data.visualizations) {
-        vizSection = `
-          <div class="dashboard-section">
-            <h4>Available Visualizations</h4>
-            <div class="viz-grid">
-              ${data.visualizations.map(v => `
-                <div class="viz-card">
-                  <div class="icon">${v.icon}</div>
-                  <div class="name">${v.name}</div>
-                </div>
-              `).join('')}
+      if (data.showFullDashboard) {
+        chartsSection += `
+          <div style="margin-top: 15px; padding: 15px; background: linear-gradient(135deg, rgba(0,229,255,0.1), rgba(0,229,170,0.05)); border-radius: 12px;">
+            <h5 style="font-size: 12px; color: #666; margin-bottom: 12px;">AVAILABLE VIEWS</h5>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+              <div style="background: rgba(255,255,255,0.5); padding: 12px; border-radius: 8px; text-align: center; cursor: pointer;">
+                <div style="font-size: 24px; margin-bottom: 5px;">📈</div>
+                <div style="font-size: 11px; color: #555;">Real-time Charts</div>
+              </div>
+              <div style="background: rgba(255,255,255,0.5); padding: 12px; border-radius: 8px; text-align: center; cursor: pointer;">
+                <div style="font-size: 24px; margin-bottom: 5px;">📊</div>
+                <div style="font-size: 11px; color: #555;">Analytics</div>
+              </div>
+              <div style="background: rgba(255,255,255,0.5); padding: 12px; border-radius: 8px; text-align: center; cursor: pointer;">
+                <div style="font-size: 24px; margin-bottom: 5px;">🔔</div>
+                <div style="font-size: 11px; color: #555;">Alerts</div>
+              </div>
+              <div style="background: rgba(255,255,255,0.5); padding: 12px; border-radius: 8px; text-align: center; cursor: pointer;">
+                <div style="font-size: 24px; margin-bottom: 5px;">📋</div>
+                <div style="font-size: 11px; color: #555;">Reports</div>
+              </div>
             </div>
           </div>
         `;
@@ -1395,11 +1384,10 @@
             LIVE DATA
           </div>
           ${dataRows}
-          ${dashboardSection}
-          ${vizSection}
+          ${chartsSection}
         </div>
         <div class="panel-footer">
-          <span>Data flows to: ${data.flowTo || 'Dashboard'}</span>
+          <span>Data flows to: ${data.flowTo}</span>
           <div class="data-flow-indicator">
             <span class="flow-arrow">→</span>
             <span class="flow-arrow">→</span>
@@ -1422,8 +1410,8 @@
     let isDragging = false;
     let hasDragged = false;
     let previousMousePosition = { x: 0, y: 0 };
-    let targetRotation = { x: 0.4, y: 0.5 };
-    let currentRotation = { x: 0.4, y: 0.5 };
+    let targetRotation = { x: 0.35, y: 0.6 };
+    let currentRotation = { x: 0.35, y: 0.6 };
 
     renderer.domElement.addEventListener('mousedown', (e) => {
       isDragging = true;
@@ -1436,9 +1424,9 @@
       const deltaX = e.clientX - previousMousePosition.x;
       const deltaY = e.clientY - previousMousePosition.y;
       if (Math.abs(deltaX) > 3 || Math.abs(deltaY) > 3) hasDragged = true;
-      targetRotation.y += deltaX * 0.008;
-      targetRotation.x += deltaY * 0.005;
-      targetRotation.x = Math.max(0.1, Math.min(0.8, targetRotation.x));
+      targetRotation.y += deltaX * 0.006;
+      targetRotation.x += deltaY * 0.004;
+      targetRotation.x = Math.max(0.1, Math.min(0.7, targetRotation.x));
       previousMousePosition = { x: e.clientX, y: e.clientY };
     });
 
@@ -1465,7 +1453,7 @@
     });
 
     function resetView() {
-      targetRotation = { x: 0.4, y: 0.5 };
+      targetRotation = { x: 0.35, y: 0.6 };
     }
 
     // ============================================
@@ -1478,32 +1466,25 @@
       animationFrame++;
 
       // Smooth camera rotation
-      currentRotation.x += (targetRotation.x - currentRotation.x) * 0.08;
-      currentRotation.y += (targetRotation.y - currentRotation.y) * 0.08;
+      currentRotation.x += (targetRotation.x - currentRotation.x) * 0.06;
+      currentRotation.y += (targetRotation.y - currentRotation.y) * 0.06;
 
-      const radius = 30;
-      camera.position.x = radius * Math.sin(currentRotation.y) * Math.cos(currentRotation.x);
+      const radius = 22;
+      camera.position.x = radius * Math.sin(currentRotation.y) * Math.cos(currentRotation.x) + 2;
       camera.position.y = 8 + radius * Math.sin(currentRotation.x);
       camera.position.z = radius * Math.cos(currentRotation.y) * Math.cos(currentRotation.x);
-      camera.lookAt(0, 1, 0);
+      camera.lookAt(2, 1.5, 0);
 
-      // Animate data particles
+      // Animate particles
       particles.forEach(p => {
         p.progress += p.speed;
         if (p.progress > 1) p.progress = 0;
-
-        const t = p.isReverse ? 1 - p.progress : p.progress;
-        const point = p.curve.getPoint(t);
+        const point = p.curve.getPoint(p.progress);
         p.mesh.position.copy(point);
       });
 
-      // Subtle pulse on nodes
-      const pulse = Math.sin(animationFrame * 0.03) * 0.05 + 1;
-      Object.values(objectsMap).forEach(node => {
-        if (node.children[3]) { // Ring element
-          node.children[3].scale.set(pulse, pulse, pulse);
-        }
-      });
+      // Pulse effects on glowing elements
+      const pulse = Math.sin(animationFrame * 0.05) * 0.15 + 0.85;
 
       renderer.render(scene, camera);
     }
