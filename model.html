@@ -330,6 +330,68 @@
     .portal-card .icon { font-size: 32px; margin-bottom: 10px; }
     .portal-card .name { font-size: 13px; font-weight: 600; color: #fff; }
     .portal-card .desc { font-size: 10px; color: #888; margin-top: 5px; }
+    /* Back button */
+    .back-btn {
+      width: 100%;
+      padding: 12px;
+      margin-top: 15px;
+      background: linear-gradient(135deg, rgba(100, 100, 255, 0.3), rgba(0, 229, 255, 0.2));
+      border: 1px solid rgba(0, 229, 255, 0.3);
+      border-radius: 8px;
+      color: #00e5ff;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .back-btn:hover {
+      background: linear-gradient(135deg, rgba(0, 229, 255, 0.3), rgba(100, 100, 255, 0.2));
+      box-shadow: 0 4px 15px rgba(0, 229, 255, 0.3);
+    }
+    /* Alert list */
+    .alert-list { margin-top: 10px; }
+    .alert-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 8px;
+      margin-bottom: 8px;
+    }
+    .alert-item.warning {
+      border-left: 3px solid #fbbf24;
+    }
+    .alert-item.error {
+      border-left: 3px solid #f87171;
+    }
+    .alert-icon { font-size: 20px; }
+    .alert-content { flex: 1; }
+    .alert-title { font-size: 13px; font-weight: 600; color: #fff; }
+    .alert-desc { font-size: 11px; color: #888; margin-top: 3px; }
+    /* Report grid */
+    .report-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .report-card {
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      padding: 15px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .report-card:hover {
+      background: linear-gradient(135deg, rgba(0, 229, 255, 0.2), rgba(100, 100, 255, 0.1));
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(0, 229, 255, 0.2);
+    }
+    .report-icon { font-size: 24px; margin-bottom: 8px; }
+    .report-name { font-size: 12px; font-weight: 600; color: #fff; }
     /* Charts in popup */
     .mini-chart {
       background: rgba(0, 0, 0, 0.3);
@@ -349,6 +411,24 @@
       background: linear-gradient(to top, #00e5ff, #0099cc);
       border-radius: 3px 3px 0 0;
       animation: barGrow 0.6s ease-out;
+    }
+    .bar {
+      width: 28px;
+      background: linear-gradient(to top, #00e5ff, #0099cc);
+      border-radius: 3px 3px 0 0;
+      animation: barGrow 0.6s ease-out;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      position: relative;
+    }
+    .bar span {
+      font-size: 8px;
+      color: #fff;
+      padding-bottom: 4px;
+    }
+    .bar.active {
+      background: linear-gradient(to top, #4ade80, #22c55e);
     }
     @keyframes barGrow { from { transform: scaleY(0); } to { transform: scaleY(1); } }
     .chart-labels {
@@ -1434,27 +1514,219 @@
           </div>
           <div class="section-title">Select Portal</div>
           <div class="portal-grid">
-            <div class="portal-card" onclick="alert('Opening Press Portal...')">
+            <div class="portal-card" onclick="showPortal('press')">
               <div class="icon">🏭</div>
               <div class="name">Press Portal</div>
               <div class="desc">Production & Efficiency</div>
             </div>
-            <div class="portal-card" onclick="alert('Opening HR Portal...')">
+            <div class="portal-card" onclick="showPortal('hr')">
               <div class="icon">👥</div>
               <div class="name">HR Portal</div>
               <div class="desc">Attendance & Shifts</div>
             </div>
-            <div class="portal-card" onclick="alert('Opening Maintenance Portal...')">
+            <div class="portal-card" onclick="showPortal('maintenance')">
               <div class="icon">🔧</div>
               <div class="name">Maintenance</div>
               <div class="desc">Alerts & Schedules</div>
             </div>
-            <div class="portal-card" onclick="alert('Opening Reports Portal...')">
+            <div class="portal-card" onclick="showPortal('reports')">
               <div class="icon">📋</div>
               <div class="name">Reports</div>
               <div class="desc">Analytics & Export</div>
             </div>
           </div>
+        `
+      }
+    };
+
+    // ============================================
+    // PORTAL CONTENT DATA
+    // ============================================
+    const portalData = {
+      press: {
+        title: 'Press Portal',
+        subtitle: 'Production & Efficiency Monitoring',
+        icon: '🏭',
+        content: `
+          <div class="status-row">
+            <div class="status-indicator green"></div>
+            <span class="status-text">Machine Running</span>
+          </div>
+          <div class="section-title">Production Metrics</div>
+          <div class="mini-chart">
+            <div class="chart-title">Cycle Count Today</div>
+            <div class="chart-bars">
+              <div class="bar" style="height: 60%"><span>H1</span></div>
+              <div class="bar" style="height: 85%"><span>H2</span></div>
+              <div class="bar" style="height: 75%"><span>H3</span></div>
+              <div class="bar" style="height: 90%"><span>H4</span></div>
+              <div class="bar active" style="height: 70%"><span>H5</span></div>
+            </div>
+          </div>
+          <div class="stats-grid">
+            <div class="stat-item">
+              <div class="label">Total Cycles</div>
+              <div class="value">1,247</div>
+            </div>
+            <div class="stat-item">
+              <div class="label">Good Parts</div>
+              <div class="value" style="color: #4ade80;">1,231</div>
+            </div>
+            <div class="stat-item">
+              <div class="label">Rejected</div>
+              <div class="value" style="color: #f87171;">16</div>
+            </div>
+            <div class="stat-item">
+              <div class="label">Efficiency</div>
+              <div class="value">98.7<span class="unit">%</span></div>
+            </div>
+          </div>
+          <div class="section-title">Press Parameters</div>
+          <div class="data-list">
+            <div class="data-row"><span class="key">Force</span><span class="val">450 kN</span></div>
+            <div class="data-row"><span class="key">Stroke</span><span class="val">120 mm</span></div>
+            <div class="data-row"><span class="key">Speed</span><span class="val">25 SPM</span></div>
+            <div class="data-row"><span class="key">Die Temp</span><span class="val">42°C</span></div>
+          </div>
+          <button class="back-btn" onclick="showInfoPanel('dashboard')">← Back to Portals</button>
+        `
+      },
+      hr: {
+        title: 'HR Portal',
+        subtitle: 'Attendance & Shift Management',
+        icon: '👥',
+        content: `
+          <div class="status-row">
+            <div class="status-indicator green"></div>
+            <span class="status-text">Shift A Active</span>
+          </div>
+          <div class="section-title">Today's Attendance</div>
+          <div class="stats-grid">
+            <div class="stat-item">
+              <div class="label">Present</div>
+              <div class="value" style="color: #4ade80;">18</div>
+            </div>
+            <div class="stat-item">
+              <div class="label">Absent</div>
+              <div class="value" style="color: #f87171;">2</div>
+            </div>
+            <div class="stat-item">
+              <div class="label">On Leave</div>
+              <div class="value" style="color: #fbbf24;">1</div>
+            </div>
+            <div class="stat-item">
+              <div class="label">Overtime</div>
+              <div class="value">5</div>
+            </div>
+          </div>
+          <div class="section-title">Shift Schedule</div>
+          <div class="data-list">
+            <div class="data-row"><span class="key">Shift A</span><span class="val" style="color:#4ade80;">06:00 - 14:00 (Active)</span></div>
+            <div class="data-row"><span class="key">Shift B</span><span class="val">14:00 - 22:00</span></div>
+            <div class="data-row"><span class="key">Shift C</span><span class="val">22:00 - 06:00</span></div>
+          </div>
+          <div class="section-title">Operators on Duty</div>
+          <div class="data-list">
+            <div class="data-row"><span class="key">Press Op.</span><span class="val">John Smith</span></div>
+            <div class="data-row"><span class="key">Supervisor</span><span class="val">Maria Garcia</span></div>
+            <div class="data-row"><span class="key">Quality</span><span class="val">David Chen</span></div>
+          </div>
+          <button class="back-btn" onclick="showInfoPanel('dashboard')">← Back to Portals</button>
+        `
+      },
+      maintenance: {
+        title: 'Maintenance Portal',
+        subtitle: 'Alerts & Service Schedules',
+        icon: '🔧',
+        content: `
+          <div class="status-row">
+            <div class="status-indicator yellow"></div>
+            <span class="status-text">1 Pending Alert</span>
+          </div>
+          <div class="section-title">Active Alerts</div>
+          <div class="alert-list">
+            <div class="alert-item warning">
+              <div class="alert-icon">⚠️</div>
+              <div class="alert-content">
+                <div class="alert-title">Hydraulic Filter</div>
+                <div class="alert-desc">Replace within 48 hours</div>
+              </div>
+            </div>
+          </div>
+          <div class="section-title">Scheduled Maintenance</div>
+          <div class="data-list">
+            <div class="data-row"><span class="key">Oil Change</span><span class="val">In 5 days</span></div>
+            <div class="data-row"><span class="key">Belt Check</span><span class="val">In 12 days</span></div>
+            <div class="data-row"><span class="key">Full Service</span><span class="val">In 28 days</span></div>
+          </div>
+          <div class="section-title">Equipment Health</div>
+          <div class="stats-grid">
+            <div class="stat-item">
+              <div class="label">Hydraulics</div>
+              <div class="value" style="color: #fbbf24;">87<span class="unit">%</span></div>
+            </div>
+            <div class="stat-item">
+              <div class="label">Electrical</div>
+              <div class="value" style="color: #4ade80;">95<span class="unit">%</span></div>
+            </div>
+            <div class="stat-item">
+              <div class="label">Mechanical</div>
+              <div class="value" style="color: #4ade80;">92<span class="unit">%</span></div>
+            </div>
+            <div class="stat-item">
+              <div class="label">Overall</div>
+              <div class="value">91<span class="unit">%</span></div>
+            </div>
+          </div>
+          <button class="back-btn" onclick="showInfoPanel('dashboard')">← Back to Portals</button>
+        `
+      },
+      reports: {
+        title: 'Reports Portal',
+        subtitle: 'Analytics & Data Export',
+        icon: '📋',
+        content: `
+          <div class="status-row">
+            <div class="status-indicator green"></div>
+            <span class="status-text">Reports Up to Date</span>
+          </div>
+          <div class="section-title">Quick Reports</div>
+          <div class="report-grid">
+            <div class="report-card" onclick="alert('Generating Daily Report...')">
+              <div class="report-icon">📊</div>
+              <div class="report-name">Daily Summary</div>
+            </div>
+            <div class="report-card" onclick="alert('Generating Weekly Report...')">
+              <div class="report-icon">📈</div>
+              <div class="report-name">Weekly Trends</div>
+            </div>
+            <div class="report-card" onclick="alert('Generating OEE Report...')">
+              <div class="report-icon">⚡</div>
+              <div class="report-name">OEE Report</div>
+            </div>
+            <div class="report-card" onclick="alert('Generating Quality Report...')">
+              <div class="report-icon">✅</div>
+              <div class="report-name">Quality Report</div>
+            </div>
+          </div>
+          <div class="section-title">Recent Exports</div>
+          <div class="data-list">
+            <div class="data-row"><span class="key">Jan 25 Report</span><span class="val" style="color:#4ade80;">✓ Downloaded</span></div>
+            <div class="data-row"><span class="key">Jan 24 Report</span><span class="val" style="color:#4ade80;">✓ Downloaded</span></div>
+            <div class="data-row"><span class="key">Weekly W3</span><span class="val" style="color:#4ade80;">✓ Downloaded</span></div>
+          </div>
+          <div class="section-title">Export Options</div>
+          <div class="stats-grid">
+            <div class="stat-item" style="cursor:pointer" onclick="alert('Exporting as PDF...')">
+              <div class="label">Format</div>
+              <div class="value" style="font-size:14px;">PDF 📄</div>
+            </div>
+            <div class="stat-item" style="cursor:pointer" onclick="alert('Exporting as Excel...')">
+              <div class="label">Format</div>
+              <div class="value" style="font-size:14px;">Excel 📗</div>
+            </div>
+          </div>
+          <button class="back-btn" onclick="showInfoPanel('dashboard')">← Back to Portals</button>
         `
       }
     };
@@ -1488,6 +1760,26 @@
     function hidePanel() {
       document.getElementById('overlay').style.display = 'none';
       document.getElementById('infoPanel').style.display = 'none';
+    }
+
+    function showPortal(portalType) {
+      const data = portalData[portalType];
+      if (!data) return;
+
+      const panel = document.getElementById('infoPanel');
+      panel.innerHTML = `
+        <div class="panel-header">
+          <div class="panel-icon">${data.icon}</div>
+          <div class="panel-title">
+            <h3>${data.title}</h3>
+            <div class="subtitle">${data.subtitle}</div>
+          </div>
+          <button class="panel-close" onclick="hidePanel()">×</button>
+        </div>
+        <div class="panel-content">
+          ${data.content}
+        </div>
+      `;
     }
 
     // ============================================
