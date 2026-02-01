@@ -2480,7 +2480,7 @@
             if (!labelsVisible) return;
 
             const cameraDistance = camera.position.length();
-            const showLabels = cameraDistance < 35;
+            const showLabels = cameraDistance < 55;
 
             Object.entries(componentLabels).forEach(([key, data]) => {
                 const worldPos = new THREE.Vector3(...data.offset);
@@ -2517,12 +2517,12 @@
 
         // Spherical coordinates for full 360° orbit
         let cameraOrbit = {
-            theta: 0.5,      // Horizontal angle (full 360°)
-            phi: 1.2,        // Vertical angle (nearly full range)
-            radius: 12       // Distance from center
+            theta: 0.4,      // Horizontal angle (full 360°)
+            phi: 1.1,        // Vertical angle (slightly above)
+            radius: 42       // Distance from center - zoomed out to see full scene
         };
         let targetOrbit = { ...cameraOrbit };
-        const orbitCenter = new THREE.Vector3(3.5, 2, 0);
+        const orbitCenter = new THREE.Vector3(3.5, 1.5, 0);
 
         // Track hovered object for highlighting
         let hoveredObject = null;
@@ -2645,7 +2645,7 @@
             const zoomSpeed = 0.002;
             const delta = e.deltaY * zoomSpeed;
             targetOrbit.radius *= (1 + delta);
-            targetOrbit.radius = Math.max(5, Math.min(25, targetOrbit.radius));
+            targetOrbit.radius = Math.max(15, Math.min(60, targetOrbit.radius));
         }, { passive: false });
 
         // Touch support for mobile
@@ -2680,7 +2680,7 @@
                 );
                 const delta = (touchStartDistance - currentDistance) * 0.02;
                 targetOrbit.radius += delta;
-                targetOrbit.radius = Math.max(5, Math.min(25, targetOrbit.radius));
+                targetOrbit.radius = Math.max(15, Math.min(60, targetOrbit.radius));
                 touchStartDistance = currentDistance;
             }
         }, { passive: false });
@@ -2691,7 +2691,7 @@
         });
 
         function resetView() {
-            targetOrbit = { theta: 0.5, phi: 1.2, radius: 12 };
+            targetOrbit = { theta: 0.4, phi: 1.1, radius: 42 };
         }
 
         // Update click indicators (pulsing dots on objects)
@@ -2700,7 +2700,7 @@
             indicatorsContainer.innerHTML = '';
 
             const cameraDistance = cameraOrbit.radius;
-            if (cameraDistance > 18) return; // Hide indicators when zoomed out too far
+            if (cameraDistance > 55) return; // Hide indicators when zoomed out too far
 
             // Only show indicators for main components
             const mainComponents = ['press', 'plc', 'edge', 'cloud', 'dashboard'];
