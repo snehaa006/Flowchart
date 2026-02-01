@@ -86,114 +86,6 @@
             font-weight: 600;
         }
 
-        /* Hint bar for clicking objects */
-        .hint-bar {
-            position: absolute;
-            bottom: 80px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: linear-gradient(135deg, rgba(0, 229, 255, 0.15), rgba(100, 100, 255, 0.1));
-            color: #fff;
-            padding: 14px 28px;
-            border-radius: 30px;
-            font-size: 14px;
-            z-index: 100;
-            border: 1px solid rgba(0, 229, 255, 0.4);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            animation: hintPulse 2s ease-in-out infinite, fadeInUp 0.5s ease-out;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 20px rgba(0, 229, 255, 0.2);
-        }
-
-        .hint-bar:hover {
-            background: linear-gradient(135deg, rgba(0, 229, 255, 0.25), rgba(100, 100, 255, 0.2));
-            transform: translateX(-50%) scale(1.02);
-            box-shadow: 0 6px 30px rgba(0, 229, 255, 0.3);
-        }
-
-        .hint-bar .hint-icon {
-            font-size: 20px;
-            animation: bounce 1s ease-in-out infinite;
-        }
-
-        .hint-bar .hint-text {
-            font-weight: 500;
-        }
-
-        .hint-bar .hint-text span {
-            color: #00e5ff;
-            font-weight: 700;
-        }
-
-        .hint-bar .hint-arrow {
-            color: #00e5ff;
-            animation: arrowMove 1s ease-in-out infinite;
-        }
-
-        @keyframes hintPulse {
-            0%, 100% { box-shadow: 0 4px 20px rgba(0, 229, 255, 0.2); }
-            50% { box-shadow: 0 4px 30px rgba(0, 229, 255, 0.4); }
-        }
-
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateX(-50%) translateY(20px); }
-            to { opacity: 1; transform: translateX(-50%) translateY(0); }
-        }
-
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-3px); }
-        }
-
-        @keyframes arrowMove {
-            0%, 100% { transform: translateX(0); }
-            50% { transform: translateX(5px); }
-        }
-
-        /* Clickable object indicator dots */
-        .click-indicator {
-            position: absolute;
-            width: 16px;
-            height: 16px;
-            background: rgba(0, 229, 255, 0.8);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 60;
-            animation: indicatorPulse 1.5s ease-in-out infinite;
-            box-shadow: 0 0 10px rgba(0, 229, 255, 0.6);
-        }
-
-        .click-indicator::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 30px;
-            height: 30px;
-            border: 2px solid rgba(0, 229, 255, 0.5);
-            border-radius: 50%;
-            animation: indicatorRing 1.5s ease-in-out infinite;
-        }
-
-        @keyframes indicatorPulse {
-            0%, 100% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.2); opacity: 0.8; }
-        }
-
-        @keyframes indicatorRing {
-            0% { transform: translate(-50%, -50%) scale(0.8); opacity: 1; }
-            100% { transform: translate(-50%, -50%) scale(1.8); opacity: 0; }
-        }
-
-        /* Hover cursor change */
-        .clickable-hover {
-            cursor: pointer !important;
-        }
-
         /* Control buttons */
         .controls {
             position: absolute;
@@ -749,16 +641,6 @@
     <!-- Component Labels Container -->
     <div id="labelsContainer"></div>
 
-    <!-- Hint bar for clicking objects -->
-    <div id="hintBar" class="hint-bar" onclick="this.style.display='none'">
-        <span class="hint-icon">👆</span>
-        <span class="hint-text"><span>Click</span> on any component to explore details</span>
-        <span class="hint-arrow">→</span>
-    </div>
-
-    <!-- Click indicators container -->
-    <div id="clickIndicators"></div>
-
     <!-- Overlay & Panel -->
     <div id="overlay" class="overlay" style="display: none;" onclick="hidePanel()"></div>
     <div id="infoPanel" class="info-panel" style="display: none;"></div>
@@ -775,9 +657,8 @@
         // Dark background to match website (#0a0b0d)
         scene.background = new THREE.Color(0x0a0b0d);  // NEW
 
-        const camera = new THREE.PerspectiveCamera(22, window.innerWidth / window.innerHeight, 0.1, 1000)
-        // Initial position will be set by orbit system in animation loop
-        camera.position.set(3.5, 10, 15)
+        const camera = new THREE.PerspectiveCamera(22, window.innerWidth / window.innerHeight, 0.1, 1000)        
+        camera.position.set(3.5, 2.5, 10)        
         camera.lookAt(3.5, 2, 0)
 
         const renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -2480,7 +2361,7 @@
             if (!labelsVisible) return;
 
             const cameraDistance = camera.position.length();
-            const showLabels = cameraDistance < 55;
+            const showLabels = cameraDistance < 35;
 
             Object.entries(componentLabels).forEach(([key, data]) => {
                 const worldPos = new THREE.Vector3(...data.offset);
@@ -2514,19 +2395,8 @@
         let isDragging = false;
         let hasDragged = false;
         let previousMousePosition = { x: 0, y: 0 };
-
-        // Spherical coordinates for full 360° orbit
-        let cameraOrbit = {
-            theta: 0.4,      // Horizontal angle (full 360°)
-            phi: 1.1,        // Vertical angle (slightly above)
-            radius: 42       // Distance from center - zoomed out to see full scene
-        };
-        let targetOrbit = { ...cameraOrbit };
-        const orbitCenter = new THREE.Vector3(3.5, 1.5, 0);
-
-        // Track hovered object for highlighting
-        let hoveredObject = null;
-        let originalMaterials = new Map();
+        let targetRotation = { x: 0.3, y: 0.5 };
+        let currentRotation = { x: 0.3, y: 0.5 };
 
         renderer.domElement.addEventListener('mousedown', (e) => {
             isDragging = true;
@@ -2535,80 +2405,16 @@
         });
 
         renderer.domElement.addEventListener('mousemove', (e) => {
-            // Handle drag rotation
-            if (isDragging) {
-                const deltaX = e.clientX - previousMousePosition.x;
-                const deltaY = e.clientY - previousMousePosition.y;
-                if (Math.abs(deltaX) > 3 || Math.abs(deltaY) > 3) hasDragged = true;
-
-                // Full 360° horizontal rotation
-                targetOrbit.theta -= deltaX * 0.008;
-
-                // Vertical rotation with wider limits (nearly pole to pole)
-                targetOrbit.phi -= deltaY * 0.005;
-                targetOrbit.phi = Math.max(0.2, Math.min(Math.PI - 0.2, targetOrbit.phi));
-
-                previousMousePosition = { x: e.clientX, y: e.clientY };
-            }
-
-            // Handle hover detection for highlighting
-            const rect = renderer.domElement.getBoundingClientRect();
-            mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
-            mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
-
-            raycaster.setFromCamera(mouse, camera);
-            const allObjects = Object.values(objectsMap);
-            const intersects = raycaster.intersectObjects(allObjects, true);
-
-            if (intersects.length > 0) {
-                let obj = intersects[0].object;
-                while (obj.parent && !obj.userData.type) {
-                    obj = obj.parent;
-                }
-                if (obj.userData.type && obj !== hoveredObject) {
-                    // Reset previous hovered object
-                    if (hoveredObject) {
-                        resetObjectHighlight(hoveredObject);
-                    }
-                    hoveredObject = obj;
-                    highlightObject(obj);
-                    renderer.domElement.classList.add('clickable-hover');
-                }
-            } else {
-                if (hoveredObject) {
-                    resetObjectHighlight(hoveredObject);
-                    hoveredObject = null;
-                }
-                renderer.domElement.classList.remove('clickable-hover');
-            }
+            if (!isDragging) return;
+            const deltaX = e.clientX - previousMousePosition.x;
+            const deltaY = e.clientY - previousMousePosition.y;
+            if (Math.abs(deltaX) > 3 || Math.abs(deltaY) > 3) hasDragged = true;
+            targetRotation.y += deltaX * 0.005;
+            targetRotation.x += deltaY * 0.003;
+            // Allow nearly full 360 rotation (limit vertical to prevent flipping)
+            targetRotation.x = Math.max(-0.8, Math.min(1.2, targetRotation.x));
+            previousMousePosition = { x: e.clientX, y: e.clientY };
         });
-
-        // Highlight object on hover
-        function highlightObject(obj) {
-            obj.traverse((child) => {
-                if (child.isMesh && child.material) {
-                    if (!originalMaterials.has(child.uuid)) {
-                        originalMaterials.set(child.uuid, child.material.clone());
-                    }
-                    if (child.material.emissive) {
-                        child.material.emissive.setHex(0x00e5ff);
-                        child.material.emissiveIntensity = 0.3;
-                    }
-                }
-            });
-        }
-
-        // Reset object highlight
-        function resetObjectHighlight(obj) {
-            obj.traverse((child) => {
-                if (child.isMesh && child.material && originalMaterials.has(child.uuid)) {
-                    if (child.material.emissive) {
-                        child.material.emissive.setHex(0x000000);
-                        child.material.emissiveIntensity = 0;
-                    }
-                }
-            });
-        }
 
         renderer.domElement.addEventListener('mouseup', (e) => {
             if (!hasDragged) {
@@ -2625,13 +2431,6 @@
                     }
                     if (obj.userData.type) {
                         showInfoPanel(obj.userData.type);
-                        // Hide hint bar after first click
-                        const hintBar = document.getElementById('hintBar');
-                        if (hintBar) {
-                            hintBar.style.opacity = '0';
-                            hintBar.style.transform = 'translateX(-50%) translateY(20px)';
-                            setTimeout(() => hintBar.style.display = 'none', 300);
-                        }
                     }
                 }
             }
@@ -2642,89 +2441,14 @@
         // Zoom with mouse wheel
         renderer.domElement.addEventListener('wheel', (e) => {
             e.preventDefault();
-            const zoomSpeed = 0.002;
+            const zoomSpeed = 0.001;
             const delta = e.deltaY * zoomSpeed;
-            targetOrbit.radius *= (1 + delta);
-            targetOrbit.radius = Math.max(15, Math.min(60, targetOrbit.radius));
+            camera.position.multiplyScalar(1 + delta);
+            camera.position.clampLength(4, 12);
         }, { passive: false });
-
-        // Touch support for mobile
-        let touchStartDistance = 0;
-        renderer.domElement.addEventListener('touchstart', (e) => {
-            if (e.touches.length === 1) {
-                isDragging = true;
-                hasDragged = false;
-                previousMousePosition = { x: e.touches[0].clientX, y: e.touches[0].clientY };
-            } else if (e.touches.length === 2) {
-                touchStartDistance = Math.hypot(
-                    e.touches[0].clientX - e.touches[1].clientX,
-                    e.touches[0].clientY - e.touches[1].clientY
-                );
-            }
-        });
-
-        renderer.domElement.addEventListener('touchmove', (e) => {
-            e.preventDefault();
-            if (e.touches.length === 1 && isDragging) {
-                const deltaX = e.touches[0].clientX - previousMousePosition.x;
-                const deltaY = e.touches[0].clientY - previousMousePosition.y;
-                if (Math.abs(deltaX) > 3 || Math.abs(deltaY) > 3) hasDragged = true;
-                targetOrbit.theta -= deltaX * 0.008;
-                targetOrbit.phi -= deltaY * 0.005;
-                targetOrbit.phi = Math.max(0.2, Math.min(Math.PI - 0.2, targetOrbit.phi));
-                previousMousePosition = { x: e.touches[0].clientX, y: e.touches[0].clientY };
-            } else if (e.touches.length === 2) {
-                const currentDistance = Math.hypot(
-                    e.touches[0].clientX - e.touches[1].clientX,
-                    e.touches[0].clientY - e.touches[1].clientY
-                );
-                const delta = (touchStartDistance - currentDistance) * 0.02;
-                targetOrbit.radius += delta;
-                targetOrbit.radius = Math.max(15, Math.min(60, targetOrbit.radius));
-                touchStartDistance = currentDistance;
-            }
-        }, { passive: false });
-
-        renderer.domElement.addEventListener('touchend', () => {
-            isDragging = false;
-            hasDragged = false;
-        });
 
         function resetView() {
-            targetOrbit = { theta: 0.4, phi: 1.1, radius: 42 };
-        }
-
-        // Update click indicators (pulsing dots on objects)
-        function updateClickIndicators() {
-            const indicatorsContainer = document.getElementById('clickIndicators');
-            indicatorsContainer.innerHTML = '';
-
-            const cameraDistance = cameraOrbit.radius;
-            if (cameraDistance > 55) return; // Hide indicators when zoomed out too far
-
-            // Only show indicators for main components
-            const mainComponents = ['press', 'plc', 'edge', 'cloud', 'dashboard'];
-
-            mainComponents.forEach(key => {
-                const data = componentLabels[key];
-                if (!data) return;
-
-                const worldPos = new THREE.Vector3(...data.offset);
-                worldPos.y -= 2; // Lower the indicator position
-                data.obj.localToWorld(worldPos);
-
-                const screenPos = worldPos.clone().project(camera);
-                const x = (screenPos.x * 0.5 + 0.5) * window.innerWidth;
-                const y = (-screenPos.y * 0.5 + 0.5) * window.innerHeight;
-
-                if (screenPos.z < 1 && screenPos.z > 0) {
-                    const indicator = document.createElement('div');
-                    indicator.className = 'click-indicator';
-                    indicator.style.left = (x - 8) + 'px';
-                    indicator.style.top = (y - 8) + 'px';
-                    indicatorsContainer.appendChild(indicator);
-                }
-            });
+            targetRotation = { x: 0.3, y: 0.5 };
         }
 
         // ============================================
@@ -2738,16 +2462,15 @@
             requestAnimationFrame(animate);
             animationFrame++;
 
-            // Smooth camera orbit (spherical coordinates for full 360°)
-            cameraOrbit.theta += (targetOrbit.theta - cameraOrbit.theta) * 0.08;
-            cameraOrbit.phi += (targetOrbit.phi - cameraOrbit.phi) * 0.08;
-            cameraOrbit.radius += (targetOrbit.radius - cameraOrbit.radius) * 0.08;
+            // Smooth camera rotation
+            currentRotation.x += (targetRotation.x - currentRotation.x) * 0.05;
+            currentRotation.y += (targetRotation.y - currentRotation.y) * 0.05;
 
-            // Calculate camera position from spherical coordinates
-            camera.position.x = orbitCenter.x + cameraOrbit.radius * Math.sin(cameraOrbit.phi) * Math.sin(cameraOrbit.theta);
-            camera.position.y = orbitCenter.y + cameraOrbit.radius * Math.cos(cameraOrbit.phi);
-            camera.position.z = orbitCenter.z + cameraOrbit.radius * Math.sin(cameraOrbit.phi) * Math.cos(cameraOrbit.theta);
-            camera.lookAt(orbitCenter);
+            const radius = camera.position.length();
+            camera.position.x = radius * Math.sin(currentRotation.y) * Math.cos(currentRotation.x);
+            camera.position.y = 8 + radius * Math.sin(currentRotation.x) * 0.5;
+            camera.position.z = radius * Math.cos(currentRotation.y) * Math.cos(currentRotation.x);
+            camera.lookAt(3.5, 2, 0);
 
             // Animate press ram (up/down)
             if (pressRam) {
@@ -2815,9 +2538,6 @@
 
             // Update labels
             updateLabels();
-
-            // Update click indicators
-            updateClickIndicators();
 
             renderer.render(scene, camera);
         }
